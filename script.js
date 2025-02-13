@@ -67,6 +67,7 @@ function setLongBreak() {
 // Background Changer (Random)
 // -------------------------
 const backgrounds = [
+'#c8c6c6',
 '#7a96cc',
 '#cc7ac8',
 '#c24040',
