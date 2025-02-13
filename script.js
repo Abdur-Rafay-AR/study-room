@@ -193,6 +193,23 @@ function toggleMode() {
 }
 
 // -------------------------
+// Play YouTube Video
+// -------------------------
+function playVideoFromUrl() {
+  const urlInput = document.getElementById('video-url-input').value.trim();
+  if (urlInput === '') return;
+
+  const videoId = urlInput.split('v=')[1];
+  const ampersandPosition = videoId.indexOf('&');
+  if (ampersandPosition !== -1) {
+    videoId = videoId.substring(0, ampersandPosition);
+  }
+
+  const iframe = document.getElementById('video-player-iframe');
+  iframe.src = `https://www.youtube.com/embed/${videoId}`;
+}
+
+// -------------------------
 // Initialize on DOM Load
 // -------------------------
 document.addEventListener("DOMContentLoaded", () => {
@@ -204,4 +221,5 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.classList.remove('transition-mode');
     }, 500);
   });
+  document.getElementById('video-url-button').addEventListener('click', playVideoFromUrl);
 });
