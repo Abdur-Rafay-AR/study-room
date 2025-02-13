@@ -1,0 +1,240 @@
+/* Import a modern, clean font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color: #c8c6c6;
+    color: #333;
+    transition: background 0.5s ease, color 0.5s ease;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #2196F3, #21CBF3);
+    padding: 20px;
+    border-radius: 8px;
+    color: #fff;
+}
+
+/* Titles */
+h1, h2 {
+    margin: 0;
+    font-weight: 700;
+}
+
+/* Timer */
+#timer {
+    font-size: 48px;
+    margin: 20px 0;
+    font-weight: bold;
+    color: #2196F3;
+}
+
+/* Buttons */
+button {
+    padding: 12px 24px;
+    margin: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #2196F3;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    transition: background 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+button:hover {
+    background-color: #1976D2;
+    transform: scale(1.05);
+}
+button:active {
+    transform: scale(0.95);
+}
+
+/* Sections */
+section {
+    margin-bottom: 40px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+}
+
+section:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* To-Do List */
+#todo-list input {
+    padding: 10px;
+    font-size: 16px;
+    width: 60%;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+#todo-list button {
+    padding: 10px 20px;
+}
+
+#todo-items {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+#todo-items li {
+    background: #e0f7fa;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+#todo-items li.completed {
+    text-decoration: line-through;
+    color: #888;
+}
+#todo-items li:hover {
+    background: #b2ebf2;
+    transform: translateX(10px);
+}
+
+/* Notes Section */
+#notes-section textarea {
+    width: 80%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+#notes-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+#notes-list li {
+    background: #fff9c4;
+    color: #333;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 4px;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+#notes-list li:hover {
+    background: #fff59d;
+    transform: translateX(10px);
+}
+
+/* Settings Panel */
+#settings-panel {
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+.setting {
+    margin: 10px 0;
+}
+.setting label {
+    margin-right: 10px;
+}
+
+/* Utility */
+.hidden {
+    display: none;
+}
+
+/* Toggle Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    margin-right: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    background-color: #ccc;
+    top: 0; left: 0; right: 0; bottom: 0;
+    transition: .4s;
+    border-radius: 24px;
+}
+.slider:before {
+    content: "";
+    position: absolute;
+    height: 18px; width: 18px;
+    left: 3px; bottom: 3px;
+    background-color: #fff;
+    transition: .4s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: #2196F3;
+}
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Dark Mode */
+.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+.dark-mode header, 
+.dark-mode section {
+    background: #1e1e1e;
+}
+.dark-mode header {
+    background: linear-gradient(135deg, #333, #555);
+}
+.dark-mode button {
+    background: #333;
+    color: #e0e0e0;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Wallpaper Preview */
+#wallpaper-preview {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.wallpaper-thumb {
+    width: 150px; 
+    height: 100px;
+    object-fit: cover;
+    margin: 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: border 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.wallpaper-thumb:hover {
+    border: 2px solid #333;
+    transform: scale(1.05);
+}
