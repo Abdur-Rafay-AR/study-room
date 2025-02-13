@@ -188,6 +188,7 @@ function toggleMode() {
   } else {
     modeLabel.innerText = "Light Mode";
   }
+  document.querySelector('.footer').classList.toggle('dark-mode');
 }
 
 // -------------------------
