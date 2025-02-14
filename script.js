@@ -83,6 +83,8 @@ const wallpapers = [
   'https://images.pexels.com/photos/459225/pexels-photo-459225.jpeg',
   'https://images.pexels.com/photos/402028/pexels-photo-402028.jpeg',
   'https://images.pexels.com/photos/950058/pexels-photo-950058.jpeg',
+  'https://i.pinimg.com/originals/7a/c7/1e/7ac71e72373b0fb270b3a6d72e44eea3.gif',
+  'https://i.pinimg.com/videos/thumbnails/originals/f0/fc/d4/f0fcd4427543a9b89f4bf308eebf68f7.0000000.jpg',
 ];
 
 function loadWallpapers() {
