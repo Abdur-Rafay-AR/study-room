@@ -19,88 +19,92 @@
       </div>
     </header>
     
-    <!-- Timer Section -->
-    <section id="timer-section">
-      <h2>Study Timer</h2>
-      <div id="timer">25:00</div>
-      <div class="controls">
-        <button onclick="startTimer()">Start</button>
-        <button onclick="pauseTimer()">Pause</button>
-        <button onclick="resetTimer()">Reset</button>
-      </div>
-      <div class="break-buttons">
-        <button onclick="setShortBreak()">Short Break</button>
-        <button onclick="setLongBreak()">Long Break</button>
-      </div>
-    </section>
-
-    <!-- Background Changer -->
-    <section id="bg-changer">
-      <h2>Background Changer</h2>
-      <button onclick="changeBackground()">Random Background</button>
-    </section>
-
-    <!-- Wallpaper Preview Section -->
-    <section id="wallpaper-section">
-      <h2>Wallpaper Preview</h2>
-      <div id="wallpaper-preview"></div>
-    </section>
-
-    <!-- YouTube Video Player -->
-    <section id="video-player">
-      <h2>Study Music / Focus Music</h2>
-      <input type="text" id="video-url-input" placeholder="Paste YouTube video URL here...">
-      <button id="video-url-button">Play Video</button>
-      <iframe id="video-player-iframe" width="560" height="315" 
-              src="https://www.youtube.com/embed/xsDnEj2Hx4Q" 
-              title="YouTube video player" frameborder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-              allowfullscreen>
-      </iframe>
-    </section>
-
-    <!-- To-Do List -->
-    <section id="todo-list">
-      <h2>To-Do List</h2>
-      <input type="text" id="todo-input" placeholder="Add a new task...">
-      <button onclick="addTodo()">Add</button>
-      <ul id="todo-items"></ul>
-    </section>
-
-    <!-- Add Notes Section -->
-    <section id="notes-section">
-      <h2>Notes</h2>
-      <textarea id="note-input" placeholder="Write your note here..." rows="4"></textarea>
-      <br>
-      <button onclick="addNote()">Save Note</button>
-      <ul id="notes-list"></ul>
-    </section>
-
-    <!-- Settings Menu -->
-    <section id="settings-section">
-      <h2>
-        Settings 
-        <button id="toggle-settings" onclick="toggleSettings()">Toggle Settings</button>
-      </h2>
-      <div id="settings-panel" class="hidden">
-        <div class="setting">
-          <label for="study-duration">Study Duration (minutes):</label>
-          <input type="number" id="study-duration" min="1" value="25">
+    <div class="sections-container">
+      <!-- Timer Section -->
+      <section id="timer-section">
+        <h2>Study Timer</h2>
+        <div id="timer">25:00</div>
+        <div class="controls">
+          <button onclick="startTimer()">Start</button>
+          <button onclick="pauseTimer()">Pause</button>
+          <button onclick="resetTimer()">Reset</button>
         </div>
-        <div class="setting">
-          <label for="short-break-duration">Short Break Duration (minutes):</label>
-          <input type="number" id="short-break-duration" min="1" value="5">
+        <div class="break-buttons">
+          <button onclick="setShortBreak()">Short Break</button>
+          <button onclick="setLongBreak()">Long Break</button>
         </div>
-        <div class="setting">
-          <label for="long-break-duration">Long Break Duration (minutes):</label>
-          <input type="number" id="long-break-duration" min="1" value="15">
+      </section>
+
+      <!-- Background Changer -->
+      <section id="bg-changer">
+        <h2>Background Changer</h2>
+        <button onclick="changeBackground()">Apply Background</button>
+        <!-- New color picker for custom background -->
+        <label for="bg-color-picker">Choose Color:</label>
+        <input type="color" id="bg-color-picker" onchange="updateBackgroundColor()">
+      </section>
+
+      <!-- Wallpaper Preview Section -->
+      <section id="wallpaper-section">
+        <h2>Wallpaper Preview</h2>
+        <div id="wallpaper-preview"></div>
+      </section>
+
+      <!-- YouTube Video Player -->
+      <section id="video-player">
+        <h2>Study Music / Focus Music</h2>
+        <input type="text" id="video-url-input" placeholder="Paste YouTube video URL here...">
+        <button id="video-url-button">Play Video</button>
+        <iframe id="video-player-iframe" class="responsive-iframe" width="560" height="315" 
+                src="https://www.youtube.com/embed/xsDnEj2Hx4Q" 
+                title="YouTube video player" frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+        </iframe>
+      </section>
+
+      <!-- To-Do List -->
+      <section id="todo-list">
+        <h2>To-Do List</h2>
+        <input type="text" id="todo-input" placeholder="Add a new task...">
+        <button onclick="addTodo()">Add</button>
+        <ul id="todo-items"></ul>
+      </section>
+
+      <!-- Add Notes Section -->
+      <section id="notes-section">
+        <h2>Notes</h2>
+        <textarea id="note-input" placeholder="Write your note here..." rows="4"></textarea>
+        <br>
+        <button onclick="addNote()">Save Note</button>
+        <ul id="notes-list"></ul>
+      </section>
+
+      <!-- Settings Menu -->
+      <section id="settings-section">
+        <h2>
+          Settings 
+          <button id="toggle-settings" onclick="toggleSettings()">Toggle Settings</button>
+        </h2>
+        <div id="settings-panel" class="hidden">
+          <div class="setting">
+            <label for="study-duration">Study Duration (minutes):</label>
+            <input type="number" id="study-duration" min="1" value="25">
+          </div>
+          <div class="setting">
+            <label for="short-break-duration">Short Break Duration (minutes):</label>
+            <input type="number" id="short-break-duration" min="1" value="5">
+          </div>
+          <div class="setting">
+            <label for="long-break-duration">Long Break Duration (minutes):</label>
+            <input type="number" id="long-break-duration" min="1" value="15">
+          </div>
+          <button onclick="saveSettings()">Save Settings</button>
         </div>
-        <button onclick="saveSettings()">Save Settings</button>
-      </div>
-    </section>
-    
+      </section>
+    </div>
   </div>
-
+  
   <script src="script.js"></script>
 </body>
 <footer class="footer">

@@ -22,7 +22,7 @@ header {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    background: linear-gradient(135deg, #2196F3, #21CBF3);
+    background: linear-gradient(135deg, #9c27b0, #ba68c8);
     padding: 20px;
     border-radius: 8px;
     color: #fff;
@@ -32,6 +32,8 @@ header {
 h1, h2 {
     margin: 0;
     font-weight: 700;
+    color: white; /* Fill color */
+    text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000; /* Outline effect */
 }
 
 /* Timer */
@@ -39,7 +41,7 @@ h1, h2 {
     font-size: 48px;
     margin: 20px 0;
     font-weight: bold;
-    color: #2196F3;
+    color: #9c27b0;
 }
 
 /* Buttons */
@@ -48,7 +50,7 @@ button {
     margin: 6px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #2196F3;
+    background-color: #9c27b0;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -56,22 +58,31 @@ button {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 button:hover {
-    background-color: #1976D2;
+    background-color: #7b1fa2;
     transform: scale(1.05);
 }
 button:active {
     transform: scale(0.95);
 }
 
+/* Arrange sections side by side */
+.sections-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
 /* Sections */
 section {
-    margin-bottom: 40px;
-    background: #fff;
+    flex: 1 1 calc(33.333% - 20px); /* 3 sections per row with some margin */
+    margin: 10px;
+    background: rgba(255, 255, 255, 0.15);
     padding: 20px;
     border-radius: 8px;
     transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ddd;
+    border: 1px solid #999999;
+    backdrop-filter: blur(4px);
 }
 
 section:hover {
@@ -98,7 +109,7 @@ section:hover {
     margin-top: 20px;
 }
 #todo-items li {
-    background: #e0f7fa;
+    background: #e1bee7;
     padding: 10px;
     margin: 5px 0;
     border-radius: 4px;
@@ -110,8 +121,13 @@ section:hover {
     color: #888;
 }
 #todo-items li:hover {
-    background: #b2ebf2;
+    background: #ce93d8;
     transform: translateX(10px);
+}
+
+.dark-mode #todo-items li {
+    background: #311b92;
+    color: #fff;
 }
 
 /* Notes Section */
@@ -128,7 +144,7 @@ section:hover {
     margin-top: 20px;
 }
 #notes-list li {
-    background: #fff9c4;
+    background: #f3e5f5;
     color: #333;
     padding: 10px;
     margin: 5px 0;
@@ -136,8 +152,13 @@ section:hover {
     transition: background 0.3s ease, transform 0.3s ease;
 }
 #notes-list li:hover {
-    background: #fff59d;
+    background: #e1bee7;
     transform: translateX(10px);
+}
+
+.dark-mode #notes-list li {
+    background: #311b92;
+    color: #fff;
 }
 
 /* Settings Panel */
@@ -153,6 +174,10 @@ section:hover {
 }
 .setting label {
     margin-right: 10px;
+}
+
+.dark-mode #settings-panel {
+    background: #1e1e1e;
 }
 
 /* Utility */
@@ -192,7 +217,7 @@ section:hover {
     border-radius: 50%;
 }
 input:checked + .slider {
-    background-color: #2196F3;
+    background-color: #9c27b0;
 }
 input:checked + .slider:before {
     transform: translateX(26px);
@@ -243,7 +268,7 @@ input:checked + .slider:before {
     margin-top: 20px;
     padding: 10px;
     color: rgb(0, 0, 0);
-    background: #fff;
+    background: #ffffffb7;
     border-radius: 4px;
     border: 2px solid white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -268,7 +293,7 @@ input:checked + .slider:before {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #2196F3;
+    background-color: #9c27b0;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -277,10 +302,26 @@ input:checked + .slider:before {
 }
 
 #video-url-button:hover {
-    background-color: #1976D2;
+    background-color: #7b1fa2;
     transform: scale(1.05);
 }
 
 #video-url-button:active {
     transform: scale(0.95);
+}
+
+.responsive-iframe {
+    width: 100%;
+    height: auto;
+}
+
+/* Responsive Media Query */
+@media (max-width: 768px) {
+    .sections-container {
+        flex-direction: column;
+    }
+    section {
+        flex: 1 1 100%;
+        margin: 10px 0;
+    }
 }
