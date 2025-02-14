@@ -41,7 +41,3 @@ Feel free to fork the repository and submit pull requests for improvements and a
 
 ## Author
 Developed by **Abdur Rafay**. Check out more projects on [GitHub](https://github.com/abdur-rafay-ar).
-
-## License
-This project is licensed under the MIT License.
-
