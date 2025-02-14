@@ -309,3 +309,19 @@ input:checked + .slider:before {
 #video-url-button:active {
     transform: scale(0.95);
 }
+
+.responsive-iframe {
+    width: 100%;
+    height: auto;
+}
+
+/* Responsive Media Query */
+@media (max-width: 768px) {
+    .sections-container {
+        flex-direction: column;
+    }
+    section {
+        flex: 1 1 100%;
+        margin: 10px 0;
+    }
+}
