@@ -64,22 +64,11 @@ function setLongBreak() {
 }
 
 // -------------------------
-// Background Changer (Random)
+// Background Color Picker Functionality
 // -------------------------
-const backgrounds = [
-'#c8c6c6',
-'#7a96cc',
-'#cc7ac8',
-'#c24040',
-'#6040c2',
-];
-
-function changeBackground() {
-  const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
-  document.body.style.background = randomBg;
-  if (randomBg.startsWith('url')) {
-    document.body.style.backgroundSize = 'cover';
-  }
+function updateBackgroundColor() {
+  const color = document.getElementById('bg-color-picker').value;
+  document.body.style.background = color;
 }
 
 // -------------------------
@@ -91,7 +80,9 @@ const wallpapers = [
   'https://images.pexels.com/photos/34950/pexels-photo.jpg',
   'https://images.pexels.com/photos/355465/pexels-photo-355465.jpeg',
   'https://images.pexels.com/photos/247600/pexels-photo-247600.jpeg',
-  'https://images.pexels.com/photos/459225/pexels-photo-459225.jpeg'
+  'https://images.pexels.com/photos/459225/pexels-photo-459225.jpeg',
+  '',
+  'https://images.pexels.com/photos/950058/pexels-photo-950058.jpeg',
 ];
 
 function loadWallpapers() {

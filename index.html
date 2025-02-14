@@ -37,7 +37,10 @@
     <!-- Background Changer -->
     <section id="bg-changer">
       <h2>Background Changer</h2>
-      <button onclick="changeBackground()">Random Background</button>
+      <button onclick="changeBackground()">Apply Background</button>
+      <!-- New color picker for custom background -->
+      <label for="bg-color-picker">Choose Color:</label>
+      <input type="color" id="bg-color-picker" onchange="updateBackgroundColor()">
     </section>
 
     <!-- Wallpaper Preview Section -->
