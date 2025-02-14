@@ -81,7 +81,7 @@ const wallpapers = [
   'https://images.pexels.com/photos/355465/pexels-photo-355465.jpeg',
   'https://images.pexels.com/photos/247600/pexels-photo-247600.jpeg',
   'https://images.pexels.com/photos/459225/pexels-photo-459225.jpeg',
-  '',
+  'https://images.pexels.com/photos/402028/pexels-photo-402028.jpeg',
   'https://images.pexels.com/photos/950058/pexels-photo-950058.jpeg',
 ];
 
