@@ -22,7 +22,7 @@ header {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    background: linear-gradient(135deg, #9c27b0, #ba68c8);
+    background: linear-gradient(135deg, #2196f3, #64b5f6);
     padding: 20px;
     border-radius: 8px;
     color: #fff;
@@ -41,7 +41,7 @@ h1, h2 {
     font-size: 48px;
     margin: 20px 0;
     font-weight: bold;
-    color: #9c27b0;
+    color: #2196f3;
 }
 
 /* Buttons */
@@ -50,7 +50,7 @@ button {
     margin: 6px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #9c27b0;
+    background-color: #2196f3;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -58,7 +58,7 @@ button {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 button:hover {
-    background-color: #7b1fa2;
+    background-color: #1976d2;
     transform: scale(1.05);
 }
 button:active {
@@ -109,7 +109,7 @@ section:hover {
     margin-top: 20px;
 }
 #todo-items li {
-    background: #e1bee7;
+    background: #bbdefb;
     padding: 10px;
     margin: 5px 0;
     border-radius: 4px;
@@ -121,12 +121,12 @@ section:hover {
     color: #888;
 }
 #todo-items li:hover {
-    background: #ce93d8;
+    background: #90caf9;
     transform: translateX(10px);
 }
 
 .dark-mode #todo-items li {
-    background: #311b92;
+    background: #1a237e;
     color: #fff;
 }
 
@@ -144,7 +144,7 @@ section:hover {
     margin-top: 20px;
 }
 #notes-list li {
-    background: #f3e5f5;
+    background: #e3f2fd;
     color: #333;
     padding: 10px;
     margin: 5px 0;
@@ -152,12 +152,12 @@ section:hover {
     transition: background 0.3s ease, transform 0.3s ease;
 }
 #notes-list li:hover {
-    background: #e1bee7;
+    background: #bbdefb;
     transform: translateX(10px);
 }
 
 .dark-mode #notes-list li {
-    background: #311b92;
+    background: #1a237e;
     color: #fff;
 }
 
@@ -183,6 +183,14 @@ section:hover {
 /* Utility */
 .hidden {
     display: none;
+    animation: fadeOut 0.5s forwards;
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: scale(0.9);
+    }
 }
 
 /* Toggle Switch */
@@ -217,7 +225,7 @@ section:hover {
     border-radius: 50%;
 }
 input:checked + .slider {
-    background-color: #9c27b0;
+    background-color: #2196f3;
 }
 input:checked + .slider:before {
     transform: translateX(26px);
@@ -293,7 +301,7 @@ input:checked + .slider:before {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #9c27b0;
+    background-color: #2196f3;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -302,7 +310,7 @@ input:checked + .slider:before {
 }
 
 #video-url-button:hover {
-    background-color: #7b1fa2;
+    background-color: #1976d2;
     transform: scale(1.05);
 }
 
