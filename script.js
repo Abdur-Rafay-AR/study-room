@@ -185,6 +185,10 @@ function toggleMode() {
   document.querySelector('.footer').classList.toggle('dark-mode');
 }
 
+function toggleFocusMode() {
+  document.body.classList.toggle('focus-mode');
+}
+
 // -------------------------
 // Play YouTube Video
 // -------------------------
