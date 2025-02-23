@@ -217,6 +217,20 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('video-url-button').addEventListener('click', playVideoFromUrl);
 });
 
+function playVideoFromUrl() {
+  const urlInput = document.getElementById('video-url-input').value.trim();
+  if (urlInput === '') return;
+
+  let videoId = urlInput.split('v=')[1];
+  const ampersandPosition = videoId.indexOf('&');
+  if (ampersandPosition !== -1) {
+    videoId = videoId.substring(0, ampersandPosition);
+  }
+
+  const iframe = document.getElementById('video-player-iframe');
+  iframe.src = `https://www.youtube.com/embed/${videoId}`;
+}
+
 // -------------------------
 // Focus Mode Functionality
 // -------------------------
