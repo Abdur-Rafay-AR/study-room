@@ -75,22 +75,32 @@ function updateBackgroundColor() {
 // Wallpaper Preview Functionality
 // -------------------------
 // An array of wallpapers (from Pexels)
-const wallpapers = [
-  'https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg',
-  'https://images.pexels.com/photos/34950/pexels-photo.jpg',
-  'https://images.pexels.com/photos/355465/pexels-photo-355465.jpeg',
-  'https://images.pexels.com/photos/247600/pexels-photo-247600.jpeg',
-  'https://images.pexels.com/photos/459225/pexels-photo-459225.jpeg',
-  'https://images.pexels.com/photos/402028/pexels-photo-402028.jpeg',
-  'https://images.pexels.com/photos/950058/pexels-photo-950058.jpeg',
-  'https://i.pinimg.com/originals/7a/c7/1e/7ac71e72373b0fb270b3a6d72e44eea3.gif',
-  'https://i.pinimg.com/videos/thumbnails/originals/f0/fc/d4/f0fcd4427543a9b89f4bf308eebf68f7.0000000.jpg',
-];
+const wallpaperCategories = {
+  nature: [
+    'https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg',
+    'https://images.pexels.com/photos/34950/pexels-photo.jpg',
+    // ...add more nature URLs...
+  ],
+  abstract: [
+    'https://images.pexels.com/photos/355465/pexels-photo-355465.jpeg',
+    'https://images.pexels.com/photos/247600/pexels-photo-247600.jpeg',
+    // ...add more abstract URLs...
+  ],
+  anime: [
+    'https://wallpapercat.com/w/full/1/7/0/25940-3840x2160-desktop-4k-attack-on-titan-the-final-season-wallpaper-image.jpg',
+    'https://i.pinimg.com/originals/7a/c7/1e/7ac71e72373b0fb270b3a6d72e44eea3.gif',
+    // ...add more anime URLs...
+  ],
+};
 
 function loadWallpapers() {
   const previewContainer = document.getElementById('wallpaper-preview');
   previewContainer.innerHTML = '';
-  wallpapers.forEach(url => {
+  const categorySelect = document.getElementById('wallpaper-category');
+  const category = categorySelect.value;
+  const selectedWallpapers = wallpaperCategories[category] || [];
+
+  selectedWallpapers.forEach(url => {
     const thumb = document.createElement('img');
     // Adding query parameters to get a compressed thumbnail
     thumb.src = url + '?auto=compress&cs=tinysrgb&dpr=2&w=200';
@@ -215,6 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 500);
   });
   document.getElementById('video-url-button').addEventListener('click', playVideoFromUrl);
+  document.getElementById('wallpaper-category').addEventListener('change', loadWallpapers);
 });
 
 function playVideoFromUrl() {
