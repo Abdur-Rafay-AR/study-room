@@ -310,9 +310,16 @@ input:checked + .slider:before {
     transform: scale(0.95);
 }
 
+#video-player {
+    width: 100%;
+    height: 400px;
+    margin-top: 20px;
+}
+
 .responsive-iframe {
     width: 100%;
     height: auto;
+    min-height: 60%;
 }
 
 /* Responsive Media Query */
@@ -351,7 +358,8 @@ input:checked + .slider:before {
 }
 
 /* Focus Mode Styles */
-body.focus-mode .sections-container section:not(#timer-section) {
+body.focus-mode .sections-container section:not(#timer-section),
+body.focus-mode .footer {
     display: none;
 }
 
