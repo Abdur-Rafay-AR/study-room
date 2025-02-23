@@ -226,7 +226,7 @@ function toggleFocusMode() {
   const isFocusMode = document.body.classList.contains('focus-mode');
   
   focusButton.textContent = isFocusMode ? 'Show All' : 'Focus Mode';
-  focusButton.style.backgroundColor = isFocusMode ? '#4CAF50' : '#9c27b0';
+  focusButton.style.backgroundColor = isFocusMode ? '#4a90e2' : '#9c27b0';
   
   // Reset timer position
   if (!isFocusMode) {
