@@ -216,3 +216,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.getElementById('video-url-button').addEventListener('click', playVideoFromUrl);
 });
+
+// -------------------------
+// Focus Mode Functionality
+// -------------------------
+function toggleFocusMode() {
+  document.body.classList.toggle('focus-mode');
+  const focusButton = document.getElementById('focus-toggle');
+  const isFocusMode = document.body.classList.contains('focus-mode');
+  
+  focusButton.textContent = isFocusMode ? 'Show All' : 'Focus Mode';
+  focusButton.style.backgroundColor = isFocusMode ? '#4CAF50' : '#9c27b0';
+  
+  // Reset timer position
+  if (!isFocusMode) {
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+  }
+}
