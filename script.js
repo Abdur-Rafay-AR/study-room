@@ -79,16 +79,21 @@ const wallpaperCategories = {
   nature: [
     'https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg',
     'https://images.pexels.com/photos/34950/pexels-photo.jpg',
+    'https://images.pexels.com/photos/147411/italy-mountains-dawn-daybreak-147411.jpeg',
     // ...add more nature URLs...
   ],
   abstract: [
     'https://images.pexels.com/photos/355465/pexels-photo-355465.jpeg',
     'https://images.pexels.com/photos/247600/pexels-photo-247600.jpeg',
+    'https://images.pexels.com/photos/1907784/pexels-photo-1907784.jpeg',
     // ...add more abstract URLs...
   ],
   anime: [
+    'https://get.wallhere.com/photo/landscape-digital-art-fantasy-art-sunset-night-anime-stars-evening-moonlight-atmosphere-Aurora-midnight-darkness-screenshot-computer-wallpaper-geological-phenomenon-52613.png',
     'https://wallpapercat.com/w/full/1/7/0/25940-3840x2160-desktop-4k-attack-on-titan-the-final-season-wallpaper-image.jpg',
     'https://i.pinimg.com/originals/7a/c7/1e/7ac71e72373b0fb270b3a6d72e44eea3.gif',
+    'https://wallpapercat.com/w/full/0/4/7/1563647-3840x2160-desktop-4k-tokyo-ghoul-background.jpg',
+    'https://get.wallhere.com/photo/World-of-Warcraft-Battle-for-Azeroth-World-of-Warcraft-video-games-fire-2217642.jpg',
     // ...add more anime URLs...
   ],
 };
