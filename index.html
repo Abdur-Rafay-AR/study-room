@@ -36,6 +36,7 @@
           <button onclick="setShortBreak()">Short Break</button>
           <button onclick="setLongBreak()">Long Break</button>
         </div>
+        <audio id="timer-alert-sound" src="timer-alert.mp3" preload="auto"></audio> <!-- Add a path to a sound file -->
       </section>
 
       <!-- Background Changer -->
@@ -98,6 +99,11 @@
           <div class="setting">
             <label for="study-duration">Study Duration (minutes):</label>
             <input type="number" id="study-duration" min="1" value="25">
+          </div>
+          <div class="setting">
+            <label for="theme-hue-slider">Theme Color:</label>
+            <input type="range" id="theme-hue-slider" min="0" max="360" value="210" class="hue-slider">
+            <span id="hue-preview" class="hue-preview"></span>
           </div>
           <div class="setting">
             <label for="short-break-duration">Short Break Duration (minutes):</label>

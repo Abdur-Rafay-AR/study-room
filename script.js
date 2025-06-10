@@ -69,6 +69,58 @@ function setLongBreak() {
 function updateBackgroundColor() {
   const color = document.getElementById('bg-color-picker').value;
   document.body.style.background = color;
+
+  // Update theme hue based on selected background color
+  const hslColor = hexToHsl(color);
+  if (hslColor) {
+    const newHue = Math.round(hslColor.h);
+    document.documentElement.style.setProperty('--primary-hue', newHue);
+    
+    const hueSlider = document.getElementById('theme-hue-slider');
+    if (hueSlider) {
+      hueSlider.value = newHue;
+    }
+    
+    const huePreview = document.getElementById('hue-preview');
+    if (huePreview) {
+      huePreview.style.backgroundColor = `hsl(${newHue}, var(--primary-saturation), var(--primary-lightness))`;
+    }
+  }
+}
+
+// Helper function to convert HEX to HSL
+function hexToHsl(hex) {
+  let r = 0, g = 0, b = 0;
+  if (hex.length === 4) {
+    r = parseInt(hex[1] + hex[1], 16);
+    g = parseInt(hex[2] + hex[2], 16);
+    b = parseInt(hex[3] + hex[3], 16);
+  } else if (hex.length === 7) {
+    r = parseInt(hex[1] + hex[2], 16);
+    g = parseInt(hex[3] + hex[4], 16);
+    b = parseInt(hex[5] + hex[6], 16);
+  } else {
+    return null; // Invalid hex color
+  }
+
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h, s, l = (max + min) / 2;
+
+  if (max === min) {
+    h = s = 0; // achromatic
+  } else {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h /= 6;
+  }
+
+  return { h: h * 360, s: s * 100, l: l * 100 };
 }
 
 // -------------------------
@@ -223,6 +275,40 @@ function playVideoFromUrl() {
 document.addEventListener("DOMContentLoaded", () => {
   updateTimerDisplay();
   loadWallpapers();
+
+  // Theme Hue Slider Functionality
+  const hueSlider = document.getElementById('theme-hue-slider');
+  const huePreview = document.getElementById('hue-preview');
+
+  function updateThemeHue(hueValue) {
+    document.documentElement.style.setProperty('--primary-hue', hueValue);
+    if (huePreview) {
+      // Use the CSS variables for saturation and lightness for the preview
+      const saturation = getComputedStyle(document.documentElement).getPropertyValue('--primary-saturation').trim();
+      const lightness = getComputedStyle(document.documentElement).getPropertyValue('--primary-lightness').trim();
+      huePreview.style.backgroundColor = `hsl(${hueValue}, ${saturation}, ${lightness})`;
+    }
+  }
+
+  if (hueSlider) {
+    // Initialize preview
+    updateThemeHue(hueSlider.value);
+
+    hueSlider.addEventListener('input', (event) => {
+      updateThemeHue(event.target.value);
+    });
+  }
+  
+  // Initialize background color picker to potentially set initial hue
+  // if a default color is set in HTML that's not black/white
+  const bgColorPicker = document.getElementById('bg-color-picker');
+  if (bgColorPicker.value !== '#000000' && bgColorPicker.value !== '#ffffff') {
+      // Call updateBackgroundColor to sync theme hue if a color is pre-selected
+      // However, this might override the slider's default if not careful.
+      // For now, let slider be the master on load, and picker updates it on change.
+  }
+
+
   document.getElementById('mode-toggle').addEventListener('change', () => {
     document.body.classList.add('transition-mode');
     setTimeout(() => {
@@ -256,7 +342,6 @@ function toggleFocusMode() {
   const isFocusMode = document.body.classList.contains('focus-mode');
   
   focusButton.textContent = isFocusMode ? 'Show All' : 'Focus Mode';
-  focusButton.style.backgroundColor = isFocusMode ? '#4a90e2' : '#4a90e2;';
   
   // Reset timer position
   if (!isFocusMode) {
