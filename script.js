@@ -7,11 +7,34 @@ let shortBreakDuration = 5 * 60;   // default short break (in seconds)
 let longBreakDuration = 15 * 60;   // default long break (in seconds)
 let timeLeft = studyDuration;
 let isPaused = true;
+let currentSession = 1;
+let totalSessions = 0;
+let timerMode = 'study'; // 'study', 'shortBreak', 'longBreak'
+
+// Session tracking
+let sessionData = {
+  study: 0,
+  shortBreak: 0,
+  longBreak: 0,
+  dailyGoal: 8
+};
 
 function updateTimerDisplay() {
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
   document.getElementById('timer').innerText = `${pad(minutes)}:${pad(seconds)}`;
+  
+  // Update progress bar
+  const progressBar = document.getElementById('timer-progress');
+  const totalTime = timerMode === 'study' ? studyDuration : 
+                   timerMode === 'shortBreak' ? shortBreakDuration : longBreakDuration;
+  const progress = ((totalTime - timeLeft) / totalTime) * 100;
+  if (progressBar) {
+    progressBar.style.width = `${progress}%`;
+  }
+  
+  // Update document title
+  document.title = `${pad(minutes)}:${pad(seconds)} - Study Room`;
 }
 
 function pad(num) {
@@ -19,48 +42,157 @@ function pad(num) {
 }
 
 function startTimer() {
-  if (!isPaused) return; // timer already running
+  if (!isPaused) return;
   isPaused = false;
+  
   timerInterval = setInterval(() => {
     if (!isPaused) {
       if (timeLeft > 0) {
         timeLeft--;
         updateTimerDisplay();
       } else {
-        clearInterval(timerInterval);
-        alert("Time's up! Take a break.");
+        completeSession();
       }
     }
   }, 1000);
-  document.getElementById('timer').classList.add('active');
+  
+  updateTimerButtons();
+  showNotification('Timer started!', 'success');
 }
 
 function pauseTimer() {
   isPaused = true;
   clearInterval(timerInterval);
-  document.getElementById('timer').classList.remove('active');
+  updateTimerButtons();
+  showNotification('Timer paused', 'info');
 }
 
 function resetTimer() {
   isPaused = true;
   clearInterval(timerInterval);
+  timeLeft = getCurrentModeDuration();
+  updateTimerDisplay();
+  updateTimerButtons();
+  showNotification('Timer reset', 'info');
+}
+
+function completeSession() {
+  clearInterval(timerInterval);
+  isPaused = true;
+  
+  // Update session data
+  sessionData[timerMode]++;
+  totalSessions++;
+  
+  // Play sound notification
+  playNotificationSound();
+  
+  // Show completion message and auto-transition
+  if (timerMode === 'study') {
+    showNotification('Study session complete! Time for a break.', 'success');
+    if (currentSession % 4 === 0) {
+      setLongBreak();
+      showNotification('Long break time!', 'success');
+    } else {
+      setShortBreak();
+      showNotification('Short break time!', 'success');
+    }
+    currentSession++;
+  } else {
+    showNotification('Break complete! Ready for next study session?', 'success');
+    setStudyMode();
+  }
+  
+  updateSessionDisplay();
+  updateTimerButtons();
+}
+
+function getCurrentModeDuration() {
+  return timerMode === 'study' ? studyDuration : 
+         timerMode === 'shortBreak' ? shortBreakDuration : longBreakDuration;
+}
+
+function setStudyMode() {
+  timerMode = 'study';
   timeLeft = studyDuration;
   updateTimerDisplay();
-  document.getElementById('timer').classList.remove('active');
+  updateModeDisplay();
 }
 
 function setShortBreak() {
-  isPaused = true;
-  clearInterval(timerInterval);
+  timerMode = 'shortBreak';
   timeLeft = shortBreakDuration;
   updateTimerDisplay();
+  updateModeDisplay();
 }
 
 function setLongBreak() {
-  isPaused = true;
-  clearInterval(timerInterval);
+  timerMode = 'longBreak';
   timeLeft = longBreakDuration;
   updateTimerDisplay();
+  updateModeDisplay();
+}
+
+function updateModeDisplay() {
+  const modeDisplay = document.getElementById('timer-mode');
+  const modeNames = {
+    study: 'Study Session',
+    shortBreak: 'Short Break',
+    longBreak: 'Long Break'
+  };
+  if (modeDisplay) {
+    modeDisplay.textContent = modeNames[timerMode];
+  }
+}
+
+function updateTimerButtons() {
+  const startBtn = document.querySelector('[onclick="startTimer()"]');
+  const pauseBtn = document.querySelector('[onclick="pauseTimer()"]');
+  
+  if (startBtn) startBtn.disabled = !isPaused;
+  if (pauseBtn) pauseBtn.disabled = isPaused;
+}
+
+function updateSessionDisplay() {
+  const sessionDisplay = document.getElementById('session-counter');
+  if (sessionDisplay) {
+    sessionDisplay.textContent = `Session ${currentSession} | Completed: ${totalSessions}`;
+  }
+  
+  const progressDisplay = document.getElementById('daily-progress');
+  if (progressDisplay) {
+    const progress = Math.min((sessionData.study / sessionData.dailyGoal) * 100, 100);
+    progressDisplay.style.width = `${progress}%`;
+  }
+}
+
+function playNotificationSound() {
+  const audio = document.getElementById('timer-alert-sound');
+  if (audio) {
+    audio.play().catch(e => console.log('Audio play failed:', e));
+  }
+}
+
+// -------------------------
+// Notification System
+// -------------------------
+function showNotification(message, type = 'info') {
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.textContent = message;
+  
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.classList.add('show');
+  }, 100);
+  
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => {
+      notification.remove();
+    }, 300);
+  }, 3000);
 }
 
 // -------------------------
@@ -70,7 +202,6 @@ function updateBackgroundColor() {
   const color = document.getElementById('bg-color-picker').value;
   document.body.style.background = color;
 
-  // Update theme hue based on selected background color
   const hslColor = hexToHsl(color);
   if (hslColor) {
     const newHue = Math.round(hslColor.h);
@@ -88,7 +219,6 @@ function updateBackgroundColor() {
   }
 }
 
-// Helper function to convert HEX to HSL
 function hexToHsl(hex) {
   let r = 0, g = 0, b = 0;
   if (hex.length === 4) {
@@ -100,7 +230,7 @@ function hexToHsl(hex) {
     g = parseInt(hex[3] + hex[4], 16);
     b = parseInt(hex[5] + hex[6], 16);
   } else {
-    return null; // Invalid hex color
+    return null;
   }
 
   r /= 255; g /= 255; b /= 255;
@@ -108,7 +238,7 @@ function hexToHsl(hex) {
   let h, s, l = (max + min) / 2;
 
   if (max === min) {
-    h = s = 0; // achromatic
+    h = s = 0;
   } else {
     const d = max - min;
     s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
@@ -126,93 +256,168 @@ function hexToHsl(hex) {
 // -------------------------
 // Wallpaper Preview Functionality
 // -------------------------
-// An array of wallpapers (from Pexels)
 const wallpaperCategories = {
   nature: [
     'https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg',
     'https://images.pexels.com/photos/34950/pexels-photo.jpg',
     'https://images.pexels.com/photos/147411/italy-mountains-dawn-daybreak-147411.jpeg',
-    // ...add more nature URLs...
   ],
   abstract: [
     'https://images.pexels.com/photos/355465/pexels-photo-355465.jpeg',
     'https://images.pexels.com/photos/247600/pexels-photo-247600.jpeg',
     'https://images.pexels.com/photos/1907784/pexels-photo-1907784.jpeg',
-    // ...add more abstract URLs...
   ],
   anime: [
     'https://get.wallhere.com/photo/landscape-digital-art-fantasy-art-sunset-night-anime-stars-evening-moonlight-atmosphere-Aurora-midnight-darkness-screenshot-computer-wallpaper-geological-phenomenon-52613.png',
     'https://wallpapercat.com/w/full/1/7/0/25940-3840x2160-desktop-4k-attack-on-titan-the-final-season-wallpaper-image.jpg',
     'https://i.pinimg.com/originals/7a/c7/1e/7ac71e72373b0fb270b3a6d72e44eea3.gif',
-    'https://wallpapercat.com/w/full/0/4/7/1563647-3840x2160-desktop-4k-tokyo-ghoul-background.jpg',
-    'https://get.wallhere.com/photo/World-of-Warcraft-Battle-for-Azeroth-World-of-Warcraft-video-games-fire-2217642.jpg',
-    // ...add more anime URLs...
   ],
 };
 
 function loadWallpapers() {
   const previewContainer = document.getElementById('wallpaper-preview');
-  previewContainer.innerHTML = '';
   const categorySelect = document.getElementById('wallpaper-category');
   const category = categorySelect.value;
   const selectedWallpapers = wallpaperCategories[category] || [];
 
-  selectedWallpapers.forEach(url => {
-    const thumb = document.createElement('img');
-    // Adding query parameters to get a compressed thumbnail
-    thumb.src = url + '?auto=compress&cs=tinysrgb&dpr=2&w=200';
-    thumb.className = 'wallpaper-thumb';
-    thumb.onclick = function() {
-      applyWallpaper(url);
-    };
-    previewContainer.appendChild(thumb);
-  });
+  previewContainer.innerHTML = '<div class="loading">Loading wallpapers...</div>';
+
+  setTimeout(() => {
+    previewContainer.innerHTML = '';
+    selectedWallpapers.forEach((url, index) => {
+      const thumb = document.createElement('img');
+      thumb.src = url + '?auto=compress&cs=tinysrgb&dpr=2&w=200';
+      thumb.className = 'wallpaper-thumb';
+      thumb.alt = `${category} wallpaper ${index + 1}`;
+      thumb.onclick = function() {
+        applyWallpaper(url);
+      };
+      thumb.onerror = function() {
+        this.style.display = 'none';
+      };
+      previewContainer.appendChild(thumb);
+    });
+  }, 500);
 }
 
 function applyWallpaper(url) {
   document.body.style.background = `url('${url}') no-repeat center center fixed`;
   document.body.style.backgroundSize = 'cover';
   document.body.classList.add('wallpaper-applied');
+  showNotification('Wallpaper applied successfully!', 'success');
 }
 
 // -------------------------
 // To-Do List Functionality
 // -------------------------
+let todos = JSON.parse(localStorage.getItem('todos')) || [];
+
 function addTodo() {
   const input = document.getElementById('todo-input');
   const task = input.value.trim();
-  if (task === '') return;
+  if (task === '') {
+    showNotification('Please enter a task', 'error');
+    return;
+  }
 
-  const li = document.createElement('li');
-  li.innerText = task;
+  const todo = {
+    id: Date.now(),
+    text: task,
+    completed: false,
+    createdAt: new Date().toISOString()
+  };
 
-  // Toggle completion on click
-  li.addEventListener('click', () => {
-    li.classList.toggle('completed');
-  });
-
-  document.getElementById('todo-items').appendChild(li);
+  todos.push(todo);
+  saveTodos();
+  renderTodos();
   input.value = '';
+  showNotification('Task added!', 'success');
+}
+
+function toggleTodo(id) {
+  todos = todos.map(todo => 
+    todo.id === id ? { ...todo, completed: !todo.completed } : todo
+  );
+  saveTodos();
+  renderTodos();
+}
+
+function deleteTodo(id) {
+  todos = todos.filter(todo => todo.id !== id);
+  saveTodos();
+  renderTodos();
+  showNotification('Task removed', 'info');
+}
+
+function renderTodos() {
+  const todosList = document.getElementById('todo-items');
+  todosList.innerHTML = '';
+
+  todos.forEach(todo => {
+    const li = document.createElement('li');
+    li.className = todo.completed ? 'completed' : '';
+    li.innerHTML = `
+      <span onclick="toggleTodo(${todo.id})">${todo.text}</span>
+      <button class="delete-btn" onclick="deleteTodo(${todo.id})">×</button>
+    `;
+    todosList.appendChild(li);
+  });
+}
+
+function saveTodos() {
+  localStorage.setItem('todos', JSON.stringify(todos));
 }
 
 // -------------------------
 // Notes Functionality
 // -------------------------
+let notes = JSON.parse(localStorage.getItem('notes')) || [];
+
 function addNote() {
   const noteInput = document.getElementById('note-input');
   const noteText = noteInput.value.trim();
-  if (noteText === '') return;
+  if (noteText === '') {
+    showNotification('Please enter a note', 'error');
+    return;
+  }
 
-  const li = document.createElement('li');
-  li.innerText = noteText;
-  
-  // Optionally, click to remove the note
-  li.addEventListener('click', () => {
-    li.remove();
-  });
+  const note = {
+    id: Date.now(),
+    text: noteText,
+    createdAt: new Date().toISOString()
+  };
 
-  document.getElementById('notes-list').appendChild(li);
+  notes.push(note);
+  saveNotes();
+  renderNotes();
   noteInput.value = '';
+  showNotification('Note saved!', 'success');
+}
+
+function deleteNote(id) {
+  notes = notes.filter(note => note.id !== id);
+  saveNotes();
+  renderNotes();
+  showNotification('Note deleted', 'info');
+}
+
+function renderNotes() {
+  const notesList = document.getElementById('notes-list');
+  notesList.innerHTML = '';
+
+  notes.forEach(note => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <span>${note.text}</span>
+      <small>${new Date(note.createdAt).toLocaleDateString()}</small>
+      <button class="delete-btn" onclick="deleteNote(${note.id})">×</button>
+    `;
+    notesList.appendChild(li);
+  });
+}
+
+function saveNotes() {
+  localStorage.setItem('notes', JSON.stringify(notes));
 }
 
 // -------------------------
@@ -227,15 +432,40 @@ function saveSettings() {
   const studyInput = document.getElementById('study-duration').value;
   const shortInput = document.getElementById('short-break-duration').value;
   const longInput = document.getElementById('long-break-duration').value;
+  const dailyGoalInput = document.getElementById('daily-goal').value;
 
-  // Update durations (convert minutes to seconds)
   studyDuration = parseInt(studyInput, 10) * 60 || studyDuration;
   shortBreakDuration = parseInt(shortInput, 10) * 60 || shortBreakDuration;
   longBreakDuration = parseInt(longInput, 10) * 60 || longBreakDuration;
+  sessionData.dailyGoal = parseInt(dailyGoalInput, 10) || sessionData.dailyGoal;
 
-  // Optionally, reset timer to new study duration
   resetTimer();
-  alert("Settings saved!");
+  updateSessionDisplay();
+  showNotification('Settings saved successfully!', 'success');
+  
+  // Save to localStorage
+  localStorage.setItem('studySettings', JSON.stringify({
+    studyDuration: studyDuration / 60,
+    shortBreakDuration: shortBreakDuration / 60,
+    longBreakDuration: longBreakDuration / 60,
+    dailyGoal: sessionData.dailyGoal
+  }));
+}
+
+function loadSettings() {
+  const savedSettings = JSON.parse(localStorage.getItem('studySettings'));
+  if (savedSettings) {
+    studyDuration = savedSettings.studyDuration * 60;
+    shortBreakDuration = savedSettings.shortBreakDuration * 60;
+    longBreakDuration = savedSettings.longBreakDuration * 60;
+    sessionData.dailyGoal = savedSettings.dailyGoal;
+    
+    // Update UI
+    document.getElementById('study-duration').value = savedSettings.studyDuration;
+    document.getElementById('short-break-duration').value = savedSettings.shortBreakDuration;
+    document.getElementById('long-break-duration').value = savedSettings.longBreakDuration;
+    document.getElementById('daily-goal').value = savedSettings.dailyGoal;
+  }
 }
 
 // -------------------------
@@ -244,93 +474,107 @@ function saveSettings() {
 function toggleMode() {
   document.body.classList.toggle('dark-mode');
   const modeLabel = document.getElementById('mode-label');
-  if(document.body.classList.contains('dark-mode')) {
-    modeLabel.innerText = "Dark Mode";
+  const isDarkMode = document.body.classList.contains('dark-mode');
+  
+  modeLabel.innerText = isDarkMode ? "Dark Mode" : "Light Mode";
+  
+  // Force update all elements that might not sync automatically
+  updateDarkModeElements(isDarkMode);
+  
+  // Save preference
+  localStorage.setItem('darkMode', isDarkMode);
+}
+
+function updateDarkModeElements(isDarkMode) {
+  // Update timer colors
+  const timer = document.getElementById('timer');
+  const timerMode = document.getElementById('timer-mode');
+  const sessionCounter = document.getElementById('session-counter');
+  
+  if (isDarkMode) {
+    if (timer) timer.style.color = '#e0e0e0';
+    if (timerMode) timerMode.style.color = '#e0e0e0';
+    if (sessionCounter) sessionCounter.style.color = '#e0e0e0';
   } else {
-    modeLabel.innerText = "Light Mode";
-  }
-  document.querySelector('.footer').classList.toggle('dark-mode');
-}
-
-// -------------------------
-// Play YouTube Video
-// -------------------------
-function playVideoFromUrl() {
-  const urlInput = document.getElementById('video-url-input').value.trim();
-  if (urlInput === '') return;
-
-  const videoId = urlInput.split('v=')[1];
-  const ampersandPosition = videoId.indexOf('&');
-  if (ampersandPosition !== -1) {
-    videoId = videoId.substring(0, ampersandPosition);
-  }
-
-  const iframe = document.getElementById('video-player-iframe');
-  iframe.src = `https://www.youtube.com/embed/${videoId}`;
-}
-
-// -------------------------
-// Initialize on DOM Load
-// -------------------------
-document.addEventListener("DOMContentLoaded", () => {
-  updateTimerDisplay();
-  loadWallpapers();
-
-  // Theme Hue Slider Functionality
-  const hueSlider = document.getElementById('theme-hue-slider');
-  const huePreview = document.getElementById('hue-preview');
-
-  function updateThemeHue(hueValue) {
-    document.documentElement.style.setProperty('--primary-hue', hueValue);
-    if (huePreview) {
-      // Use the CSS variables for saturation and lightness for the preview
-      const saturation = getComputedStyle(document.documentElement).getPropertyValue('--primary-saturation').trim();
-      const lightness = getComputedStyle(document.documentElement).getPropertyValue('--primary-lightness').trim();
-      huePreview.style.backgroundColor = `hsl(${hueValue}, ${saturation}, ${lightness})`;
-    }
-  }
-
-  if (hueSlider) {
-    // Initialize preview
-    updateThemeHue(hueSlider.value);
-
-    hueSlider.addEventListener('input', (event) => {
-      updateThemeHue(event.target.value);
-    });
+    if (timer) timer.style.color = '';
+    if (timerMode) timerMode.style.color = '';
+    if (sessionCounter) sessionCounter.style.color = '';
   }
   
-  // Initialize background color picker to potentially set initial hue
-  // if a default color is set in HTML that's not black/white
-  const bgColorPicker = document.getElementById('bg-color-picker');
-  if (bgColorPicker.value !== '#000000' && bgColorPicker.value !== '#ffffff') {
-      // Call updateBackgroundColor to sync theme hue if a color is pre-selected
-      // However, this might override the slider's default if not careful.
-      // For now, let slider be the master on load, and picker updates it on change.
-  }
-
-
-  document.getElementById('mode-toggle').addEventListener('change', () => {
-    document.body.classList.add('transition-mode');
-    setTimeout(() => {
-      document.body.classList.remove('transition-mode');
-    }, 500);
+  // Update section backgrounds
+  const sections = document.querySelectorAll('section');
+  sections.forEach(section => {
+    if (isDarkMode) {
+      section.style.background = 'rgba(30, 30, 30, 0.8)';
+      section.style.color = '#e0e0e0';
+    } else {
+      section.style.background = '';
+      section.style.color = '';
+    }
   });
-  document.getElementById('video-url-button').addEventListener('click', playVideoFromUrl);
-  document.getElementById('wallpaper-category').addEventListener('change', loadWallpapers);
-});
+  
+  // Update header
+  const header = document.querySelector('header');
+  if (header) {
+    if (isDarkMode) {
+      header.style.background = 'linear-gradient(135deg, rgba(51, 51, 51, 0.8), rgba(85, 85, 85, 0.8))';
+      header.style.color = '#e0e0e0';
+    } else {
+      header.style.background = '';
+      header.style.color = '';
+    }
+  }
+  
+  // Update footer
+  const footer = document.querySelector('.footer');
+  if (footer) {
+    footer.classList.toggle('dark-mode', isDarkMode);
+  }
+  
+  // Update all inputs and textareas
+  const inputs = document.querySelectorAll('input, textarea, select');
+  inputs.forEach(input => {
+    if (isDarkMode) {
+      input.style.background = 'rgba(255, 255, 255, 0.1)';
+      input.style.color = '#e0e0e0';
+      input.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+    } else {
+      input.style.background = '';
+      input.style.color = '';
+      input.style.borderColor = '';
+    }
+  });
+}
 
+// -------------------------
+// YouTube Video Player
+// -------------------------
 function playVideoFromUrl() {
   const urlInput = document.getElementById('video-url-input').value.trim();
-  if (urlInput === '') return;
-
-  let videoId = urlInput.split('v=')[1];
-  const ampersandPosition = videoId.indexOf('&');
-  if (ampersandPosition !== -1) {
-    videoId = videoId.substring(0, ampersandPosition);
+  if (urlInput === '') {
+    showNotification('Please enter a YouTube URL', 'error');
+    return;
   }
 
-  const iframe = document.getElementById('video-player-iframe');
-  iframe.src = `https://www.youtube.com/embed/${videoId}`;
+  try {
+    let videoId = extractVideoId(urlInput);
+    if (!videoId) {
+      showNotification('Invalid YouTube URL', 'error');
+      return;
+    }
+
+    const iframe = document.getElementById('video-player-iframe');
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    showNotification('Video loaded successfully!', 'success');
+  } catch (error) {
+    showNotification('Error loading video', 'error');
+  }
+}
+
+function extractVideoId(url) {
+  const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[7].length === 11) ? match[7] : null;
 }
 
 // -------------------------
@@ -343,10 +587,113 @@ function toggleFocusMode() {
   
   focusButton.textContent = isFocusMode ? 'Show All' : 'Focus Mode';
   
-  // Reset timer position
   if (!isFocusMode) {
     setTimeout(() => {
       window.scrollTo(0, 0);
     }, 100);
   }
 }
+
+// -------------------------
+// Keyboard Shortcuts
+// -------------------------
+function handleKeyboardShortcuts(event) {
+  if (event.ctrlKey || event.metaKey) {
+    switch (event.key) {
+      case ' ':
+        event.preventDefault();
+        isPaused ? startTimer() : pauseTimer();
+        break;
+      case 'r':
+        event.preventDefault();
+        resetTimer();
+        break;
+      case 'f':
+        event.preventDefault();
+        toggleFocusMode();
+        break;
+    }
+  }
+}
+
+// -------------------------
+// Initialize on DOM Load
+// -------------------------
+document.addEventListener("DOMContentLoaded", () => {
+  // Load saved data
+  loadSettings();
+  renderTodos();
+  renderNotes();
+  
+  // Load saved theme and apply it properly
+  const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+  if (savedDarkMode) {
+    document.body.classList.add('dark-mode');
+    document.getElementById('mode-toggle').checked = true;
+    document.getElementById('mode-label').innerText = 'Dark Mode';
+    
+    // Force update all elements to ensure proper dark mode sync
+    setTimeout(() => {
+      updateDarkModeElements(true);
+    }, 100);
+  }
+  
+  // Initialize timer
+  updateTimerDisplay();
+  updateModeDisplay();
+  updateSessionDisplay();
+  updateTimerButtons();
+  
+  // Load wallpapers
+  loadWallpapers();
+
+  // Theme Hue Slider Functionality
+  const hueSlider = document.getElementById('theme-hue-slider');
+  const huePreview = document.getElementById('hue-preview');
+
+  function updateThemeHue(hueValue) {
+    document.documentElement.style.setProperty('--primary-hue', hueValue);
+    if (huePreview) {
+      const saturation = getComputedStyle(document.documentElement).getPropertyValue('--primary-saturation').trim();
+      const lightness = getComputedStyle(document.documentElement).getPropertyValue('--primary-lightness').trim();
+      huePreview.style.backgroundColor = `hsl(${hueValue}, ${saturation}, ${lightness})`;
+    }
+  }
+
+  if (hueSlider) {
+    updateThemeHue(hueSlider.value);
+    hueSlider.addEventListener('input', (event) => {
+      updateThemeHue(event.target.value);
+    });
+  }
+
+  // Event listeners
+  document.addEventListener('keydown', handleKeyboardShortcuts);
+  document.getElementById('wallpaper-category').addEventListener('change', loadWallpapers);
+  
+  // Add Enter key support for inputs
+  document.getElementById('todo-input').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') addTodo();
+  });
+  
+  document.getElementById('note-input').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && e.ctrlKey) addNote();
+  });
+  
+  document.getElementById('video-url-input').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') playVideoFromUrl();
+  });
+  
+  // Auto-save session data
+  setInterval(() => {
+    localStorage.setItem('sessionData', JSON.stringify(sessionData));
+  }, 30000);
+  
+  // Add transition class for smooth mode switching
+  document.getElementById('mode-toggle').addEventListener('change', () => {
+    document.body.classList.add('transition-mode');
+    setTimeout(() => {
+      document.body.classList.remove('transition-mode');
+    }, 500);
+  });
+});

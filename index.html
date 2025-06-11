@@ -5,65 +5,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Personal Study Room</title>
   <link rel="stylesheet" href="style.css">
+  <meta name="description" content="A productivity-focused study room with Pomodoro timer, notes, and ambient features">
 </head>
-<header>
-  <h1>Personal Study Room</h1>
-  <div class="header-controls">
-    <div id="mode-toggle-container">
-      <label class="switch">
-        <input type="checkbox" id="mode-toggle" onchange="toggleMode()">
-        <span class="slider round"></span>
-      </label>
-      <span id="mode-label">Light Mode</span>
-    </div>
-    <button id="focus-toggle" onclick="toggleFocusMode()">Focus Mode</button>
-  </div>
-</header>
 <body>
+  <header>
+    <h1>Personal Study Room</h1>
+    <div class="header-controls">
+      <div id="mode-toggle-container">
+        <label class="switch">
+          <input type="checkbox" id="mode-toggle" onchange="toggleMode()">
+          <span class="slider round"></span>
+        </label>
+        <span id="mode-label">Light Mode</span>
+      </div>
+      <button id="focus-toggle" onclick="toggleFocusMode()" aria-label="Toggle focus mode">Focus Mode</button>
+    </div>
+  </header>
+
   <div class="container">
-    
     <div class="sections-container">
-      <!-- Timer Section -->
-      <section id="timer-section">
+      <!-- Enhanced Timer Section -->
+      <section id="timer-section" aria-label="Study timer">
         <h2>Study Timer</h2>
-        <div id="timer">25:00</div>
+        <div id="timer-mode">Study Session</div>
+        <div id="timer" role="timer" aria-live="polite">25:00</div>
+        <div id="timer-progress-container">
+          <div id="timer-progress"></div>
+        </div>
+        <div id="session-counter">Session 1 | Completed: 0</div>
         <div class="controls">
-          <button onclick="startTimer()">Start</button>
-          <button onclick="pauseTimer()">Pause</button>
-          <button onclick="resetTimer()">Reset</button>
+          <button onclick="startTimer()" aria-label="Start timer">Start</button>
+          <button onclick="pauseTimer()" aria-label="Pause timer">Pause</button>
+          <button onclick="resetTimer()" aria-label="Reset timer">Reset</button>
         </div>
         <div class="break-buttons">
-          <button onclick="setShortBreak()">Short Break</button>
-          <button onclick="setLongBreak()">Long Break</button>
+          <button onclick="setShortBreak()" aria-label="Set short break">Short Break</button>
+          <button onclick="setLongBreak()" aria-label="Set long break">Long Break</button>
+          <button onclick="setStudyMode()" aria-label="Set study mode">Study Mode</button>
         </div>
-        <audio id="timer-alert-sound" src="timer-alert.mp3" preload="auto"></audio> <!-- Add a path to a sound file -->
+        <div id="daily-progress-container" title="Daily Progress">
+          <div id="daily-progress"></div>
+        </div>
+        <audio id="timer-alert-sound" preload="auto">
+          <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmceET6S2evgpVcRAkuY4dtVRQ4TMZzOxXElBDiN0vLcmTcNGGO57ePmlUUPShzu7mVYCAQgVJ3n5LBcEwg4i9bk2JdMEQxkqeTy46dTEwg1i9ru7W5fEQQgSu4+JwEA" type="audio/wav">
+        </audio>
       </section>
 
-      <!-- Background Changer -->
-      <section id="bg-changer">
-        <h2>Background Changer</h2>
-        <button onclick="changeBackground()">Apply Background</button>
-        <!-- New color picker for custom background -->
+      <!-- Enhanced Background Changer -->
+      <section id="bg-changer" aria-label="Background customization">
+        <h2>Background</h2>
         <label for="bg-color-picker">Choose Color:</label>
-        <input type="color" id="bg-color-picker" onchange="updateBackgroundColor()">
+        <input type="color" id="bg-color-picker" onchange="updateBackgroundColor()" aria-label="Select background color">
       </section>
 
-      <!-- Wallpaper Preview Section -->
-      <section id="wallpaper-section">
-        <h2>Wallpaper Preview</h2>
-        <select id="wallpaper-category">
+      <!-- Enhanced Wallpaper Preview Section -->
+      <section id="wallpaper-section" aria-label="Wallpaper selection">
+        <h2>Wallpaper Gallery</h2>
+        <label for="wallpaper-category">Category:</label>
+        <select id="wallpaper-category" aria-label="Select wallpaper category">
           <option value="nature">Nature</option>
           <option value="abstract">Abstract</option>
           <option value="anime">Anime</option>
         </select>
-        <div id="wallpaper-preview"></div>
+        <div id="wallpaper-preview" role="grid" aria-label="Wallpaper thumbnails"></div>
       </section>
 
-      <!-- YouTube Video Player -->
-      <section id="video-player">
-        <h2>Study Music / Focus Music</h2>
-        <input type="text" id="video-url-input" placeholder="Paste YouTube video URL here...">
-        <button id="video-url-button">Play Video</button>
+      <!-- Enhanced YouTube Video Player -->
+      <section id="video-player" aria-label="Video player">
+        <h2>Study Music / Focus Sounds</h2>
+        <div class="video-controls">
+          <input type="url" id="video-url-input" placeholder="Paste YouTube video URL here..." aria-label="YouTube video URL">
+          <button id="video-url-button" onclick="playVideoFromUrl()" aria-label="Load video">Play Video</button>
+        </div>
         <iframe id="video-player-iframe" class="responsive-iframe" width="560" height="315" 
                 src="https://www.youtube.com/embed/xsDnEj2Hx4Q" 
                 title="YouTube video player" frameborder="0" 
@@ -72,57 +85,69 @@
         </iframe>
       </section>
 
-      <!-- To-Do List -->
-      <section id="todo-list">
+      <!-- Enhanced To-Do List -->
+      <section id="todo-list" aria-label="Task management">
         <h2>To-Do List</h2>
-        <input type="text" id="todo-input" placeholder="Add a new task...">
-        <button onclick="addTodo()">Add</button>
-        <ul id="todo-items"></ul>
+        <div class="input-group">
+          <input type="text" id="todo-input" placeholder="Add a new task..." aria-label="New task input" maxlength="100">
+          <button onclick="addTodo()" aria-label="Add task">Add Task</button>
+        </div>
+        <ul id="todo-items" role="list" aria-label="Task list"></ul>
       </section>
 
-      <!-- Add Notes Section -->
-      <section id="notes-section">
-        <h2>Notes</h2>
-        <textarea id="note-input" placeholder="Write your note here..." rows="4"></textarea>
-        <br>
-        <button onclick="addNote()">Save Note</button>
-        <ul id="notes-list"></ul>
+      <!-- Enhanced Notes Section -->
+      <section id="notes-section" aria-label="Notes">
+        <h2>Quick Notes</h2>
+        <div class="notes-input">
+          <textarea id="note-input" placeholder="Write your note here... (Ctrl+Enter to save)" rows="4" aria-label="Note input" maxlength="500"></textarea>
+          <button onclick="addNote()" aria-label="Save note">Save Note</button>
+        </div>
+        <ul id="notes-list" role="list" aria-label="Notes list"></ul>
       </section>
 
-      <!-- Settings Menu -->
-      <section id="settings-section">
+      <!-- Enhanced Settings Menu -->
+      <section id="settings-section" aria-label="Application settings">
         <h2>
           Settings 
-          <button id="toggle-settings" onclick="toggleSettings()">Toggle Settings</button>
+          <button id="toggle-settings" onclick="toggleSettings()" aria-label="Toggle settings panel">⚙️</button>
         </h2>
         <div id="settings-panel" class="hidden">
           <div class="setting">
             <label for="study-duration">Study Duration (minutes):</label>
-            <input type="number" id="study-duration" min="1" value="25">
+            <input type="number" id="study-duration" min="1" max="120" value="25" aria-label="Study duration in minutes">
+          </div>
+          <div class="setting">
+            <label for="short-break-duration">Short Break (minutes):</label>
+            <input type="number" id="short-break-duration" min="1" max="30" value="5" aria-label="Short break duration in minutes">
+          </div>
+          <div class="setting">
+            <label for="long-break-duration">Long Break (minutes):</label>
+            <input type="number" id="long-break-duration" min="1" max="60" value="15" aria-label="Long break duration in minutes">
+          </div>
+          <div class="setting">
+            <label for="daily-goal">Daily Goal (sessions):</label>
+            <input type="number" id="daily-goal" min="1" max="20" value="8" aria-label="Daily study sessions goal">
           </div>
           <div class="setting">
             <label for="theme-hue-slider">Theme Color:</label>
-            <input type="range" id="theme-hue-slider" min="0" max="360" value="210" class="hue-slider">
-            <span id="hue-preview" class="hue-preview"></span>
+            <input type="range" id="theme-hue-slider" min="0" max="360" value="210" class="hue-slider" aria-label="Theme color hue">
+            <span id="hue-preview" class="hue-preview" aria-hidden="true"></span>
           </div>
-          <div class="setting">
-            <label for="short-break-duration">Short Break Duration (minutes):</label>
-            <input type="number" id="short-break-duration" min="1" value="5">
-          </div>
-          <div class="setting">
-            <label for="long-break-duration">Long Break Duration (minutes):</label>
-            <input type="number" id="long-break-duration" min="1" value="15">
-          </div>
-          <button onclick="saveSettings()">Save Settings</button>
+          <button onclick="saveSettings()" class="save-settings-btn">Save Settings</button>
         </div>
       </section>
     </div>
   </div>
+
+  <!-- Keyboard Shortcuts Help -->
+  <div class="keyboard-shortcuts">
+    <strong>Shortcuts:</strong> Ctrl+Space (Start/Pause) | Ctrl+R (Reset) | Ctrl+F (Focus Mode)
+  </div>
   
   <script src="script.js"></script>
-</body>
-<footer class="footer">
-  <p>Made by Abdur Rafay. Check the code on <a href="https://github.com/abdur-rafay-ar" target="_blank">Github</a></p>
-</footer>
 
+  <footer class="footer">
+    <p>Made by Abdur Rafay. Check the code on <a href="https://github.com/abdur-rafay-ar" target="_blank" rel="noopener">Github</a></p>
+  </footer>
+</body>
 </html>

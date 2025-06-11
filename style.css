@@ -89,6 +89,7 @@ button:hover, #video-url-button:hover, #focus-toggle:hover {
 
 button:active, #video-url-button:active, #focus-toggle:active {
     transform: scale(0.95);
+    
 }
 
 /* Arrange sections side by side */
@@ -141,16 +142,45 @@ section:hover {
     margin-top: 20px;
 }
 #todo-items li {
-    background: rgba(179, 229, 252, 0.5);
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 4px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin: 8px 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-left: 4px solid var(--primary-color);
+    border-radius: 8px;
     cursor: pointer;
     transition: background 0.3s ease, transform 0.3s ease;
 }
 #todo-items li.completed {
-    text-decoration: line-through;
-    color: #888;
+    opacity: 0.7;
+    border-left-color: #4CAF50;
+}
+#todo-items li span {
+    flex: 1;
+    cursor: pointer;
+}
+.delete-btn {
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.delete-btn:hover {
+    background: #cc0000;
+    transform: scale(1.1);
 }
 #todo-items li:hover {
     background: rgba(129, 212, 250, 0.5);
@@ -176,12 +206,25 @@ section:hover {
     margin-top: 20px;
 }
 #notes-list li {
-    background: rgba(225, 245, 254, 0.5);
-    color: #333;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 4px;
-    transition: background 0.3s ease, transform 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    margin: 8px 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color-lighter);
+}
+#notes-list li small {
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 8px;
+    font-size: 12px;
+}
+#notes-list li .delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 #notes-list li:hover {
     background: rgba(179, 229, 252, 0.5);
@@ -202,10 +245,42 @@ section:hover {
     border-radius: 8px;
 }
 .setting {
-    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+.setting:hover {
+    background: rgba(255, 255, 255, 0.15);
 }
 .setting label {
     margin-right: 10px;
+}
+.setting input[type="number"],
+.setting input[type="range"] {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+}
+
+.hue-preview {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.hue-preview:hover {
+    transform: scale(1.1);
 }
 
 .dark-mode #settings-panel {
@@ -422,50 +497,460 @@ body.focus-mode #timer {
 /* Enhanced Timer Section */
 #timer-section {
     order: -1; /* Bring to top */
+    position: relative;
+    overflow: hidden;
 }
 
-#timer {
-    font-size: 56px;
-    margin: 25px 0;
-    color: var(--primary-color); /* Updated from #357ab8 */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+#timer-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: rotate(45deg);
+    transition: transform 0.6s ease;
 }
 
-/* Better Responsive Handling */
-@media (max-width: 768px) {
-    .header-controls {
-        flex-direction: column;
-        align-items: flex-end;
-    }
-
-    #timer {
-        font-size: 40px;
-    }
-
-    section {
-        padding: 20px;
-    }
+#timer-section:hover::before {
+    transform: rotate(45deg) translate(50px, 50px);
 }
 
-/* Improved Color Contrast */
-.dark-mode section {
-    background: rgba(30, 30, 30, 0.5);
+#timer-mode {
+    font-size: 18px;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-weight: 500;
 }
 
-/* Smoother Transitions */
-.sections-container {
+#timer-progress-container {
+    width: 100%;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+#timer-progress {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-color-lighter));
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 4px;
+}
+
+/* Dark mode progress bar */
+.dark-mode #timer-progress-container {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode #timer-progress {
+    background: linear-gradient(90deg, #333, #555);
+}
+
+#session-counter {
+    font-size: 14px;
+    color: var(--text-color);
+    margin-top: 10px;
+    opacity: 0.8;
+}
+
+#daily-progress-container {
+    width: 100%;
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    margin-top: 10px;
+}
+
+#daily-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    width: 0%;
+    transition: width 0.5s ease;
+    border-radius: 3px;
+}
+
+/* Dark mode daily progress */
+.dark-mode #daily-progress-container {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode #daily-progress {
+    background: linear-gradient(90deg, #2E7D32, #388E3C);
+}
+
+/* Notification System */
+.notification {
+    position: fixed;
+    top: 120px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 1000;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+}
+
+.notification.error {
+    background: linear-gradient(135deg, #f44336, #da190b);
+}
+
+.notification.info {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color-darker));
+}
+
+/* Enhanced Button Styles */
+button {
+    position: relative;
+    overflow: hidden;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+button:hover::before {
+    width: 200px;
+    height: 200px;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Enhanced To-Do List */
+#todo-items li {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin: 8px 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-left: 4px solid var(--primary-color);
+    border-radius: 8px;
+}
+
+#todo-items li.completed {
+    opacity: 0.7;
+    border-left-color: #4CAF50;
+}
+
+#todo-items li span {
+    flex: 1;
+    cursor: pointer;
+}
+
+.delete-btn {
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.3s ease;
 }
-#wallpaper-category {
-    margin: 5px 0;
-    padding: 5px;
-    border-radius: 4px;
-    background: rgba(255, 255, 255, 0.7);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+
+.delete-btn:hover {
+    background: #cc0000;
+    transform: scale(1.1);
 }
 
-#wallpaper-category:hover {
-    background: rgba(255, 255, 255, 0.9);
-    transform: translateY(-2px);
+/* Enhanced Notes Section */
+#notes-list li {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    margin: 8px 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color-lighter);
+}
+
+#notes-list li small {
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 8px;
+    font-size: 12px;
+}
+
+#notes-list li .delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/* Loading Animation */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+.loading::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-color);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    margin-left: 10px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Enhanced Settings Panel */
+.setting {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+.setting:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.setting input[type="number"],
+.setting input[type="range"] {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+}
+
+.hue-preview {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.hue-preview:hover {
+    transform: scale(1.1);
+}
+
+/* Enhanced Wallpaper Thumbnails */
+.wallpaper-thumb {
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.wallpaper-thumb::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.wallpaper-thumb:hover::before {
+    opacity: 1;
+}
+
+.wallpaper-thumb:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Improved Focus Mode */
+body.focus-mode {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+}
+
+/* Dark mode focus mode background */
+body.focus-mode.dark-mode {
+    background: #121212;
+}
+
+body.focus-mode #timer {
+    font-size: 72px;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+/* Remove glow from timer in focus mode */
+body.focus-mode #timer {
+    text-shadow: none;
+}
+
+body.focus-mode #timer-section {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Keyboard Shortcuts Help */
+.keyboard-shortcuts {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 12px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.keyboard-shortcuts:hover {
+    opacity: 1;
+}
+
+/* Improved Responsive Design */
+@media (max-width: 768px) {
+    .sections-container {
+        padding: 0 10px;
+    }
+    
+    section {
+        margin: 10px 0;
+        padding: 20px 15px;
+    }
+    
+    #timer {
+        font-size: 48px;
+    }
+    
+    body.focus-mode #timer {
+        font-size: 56px;
+    }
+    
+    .notification {
+        right: 10px;
+        left: 10px;
+        transform: translateY(-100px);
+    }
+    
+    .notification.show {
+        transform: translateY(0);
+    }
+    
+    .header-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .wallpaper-thumb {
+        width: 120px;
+        height: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+    
+    header {
+        padding: 15px;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    h1 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    
+    #timer {
+        font-size: 36px;
+    }
+    
+    button {
+        padding: 10px 16px;
+        font-size: 14px;
+        margin: 4px;
+    }
+    
+    .setting {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .setting input {
+        margin-top: 5px;
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+/* Smooth Transitions */
+* {
+    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Enhanced Dark Mode */
+.dark-mode .notification.info {
+    background: linear-gradient(135deg, #333, #555);
+}
+
+.dark-mode .setting {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .setting input {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.dark-mode #todo-items li,
+.dark-mode #notes-list li {
+    background: rgba(255, 255, 255, 0.05);
+    border-left-color: var(--primary-color);
 }
