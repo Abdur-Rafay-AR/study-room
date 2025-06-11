@@ -1,14 +1,35 @@
-/* Import a modern, clean font */
+/* Updated CSS: dynamic blue shades via --primary-color variables */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
+:root {
+    --primary-hue: 210;
+    --primary-saturation: 70%;
+    --primary-lightness: 55%;
+    --primary-color: hsl(var(--primary-hue), var(--primary-saturation), var(--primary-lightness));
+    --primary-color-darker: hsl(var(--primary-hue), var(--primary-saturation), calc(var(--primary-lightness) - 10%));
+    --primary-color-lighter: hsl(var(--primary-hue), var(--primary-saturation), calc(var(--primary-lightness) + 15%));
+
+    --text-color: #333;
+    --bg-color: #f0f0f0;
+
+    --font-family-main: 'Roboto', sans-serif;
+}
+
+.dark-mode {
+    --primary-saturation: 60%;
+    --primary-lightness: 50%;
+    --text-color: #e0e0e0;
+    --bg-color: #121212;
+}
+
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: var(--font-family-main);
     margin: 0;
     padding: 0;
     text-align: center;
-    background-color: #f0f0f0;
-    color: #333;
-    transition: background 0.5s ease, color 0.5s ease;
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 .container {
@@ -17,20 +38,18 @@ body {
     padding: 20px;
 }
 
-/* Header */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    background: linear-gradient(135deg, rgba(74, 144, 226, 0.8), rgba(80, 227, 194, 0.8));
+    background: linear-gradient(135deg, var(--primary-color-lighter), var(--primary-color));
     backdrop-filter: blur(10px);
     padding: 20px;
     border-radius: 8px;
     color: #fff;
 }
 
-/* Titles */
 h1, h2, label {
     margin: 0;
     font-weight: 700;
@@ -38,32 +57,37 @@ h1, h2, label {
     text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
 }
 
-/* Timer */
 #timer {
-    font-size: 48px;
+    font-size: 4em;
     margin: 20px 0;
-    font-weight: bold;
-    color: #4a90e2;
+    font-weight: 700;
+    color: var(--primary-color);
+    transition: color 0.3s ease;
 }
 
-/* Buttons */
-button {
+.dark-mode #timer {
+    color: #fff;
+}
+
+button, #video-url-button, #focus-toggle {
     padding: 12px 24px;
     margin: 6px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #4a90e2;
+    background-color: var(--primary-color);
     color: #fff;
     border: none;
     border-radius: 4px;
     transition: background 0.3s ease, transform 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-button:hover {
-    background-color: #357ab8;
+
+button:hover, #video-url-button:hover, #focus-toggle:hover {
+    background-color: var(--primary-color-darker);
     transform: scale(1.05);
 }
-button:active {
+
+button:active, #video-url-button:active, #focus-toggle:active {
     transform: scale(0.95);
 }
 
@@ -83,6 +107,14 @@ section {
     border-radius: 12px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     border: none;
+}
+
+/* Make the Background Changer section smaller */
+section#bg-changer {
+    flex: 1 1 15%; /* Adjust flex-basis to be smaller */
+    min-width: 180px; /* Ensure it doesn't get too squished */
+    /* min-height: 200px; Make the section height smaller */
+    max-height: fit-content;
 }
 
 section:hover {
@@ -217,7 +249,7 @@ section:hover {
     border-radius: 50%;
 }
 input:checked + .slider {
-    background-color: #4a90e2;
+    background-color: #121212;
 }
 input:checked + .slider:before {
     transform: translateX(26px);
@@ -242,11 +274,26 @@ input:checked + .slider:before {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
+.dark-mode #focus-toggle,
+.dark-mode #video-url-button {
+    background-color: #333; /* Match general dark mode button */
+    color: #e0e0e0;         /* Match general dark mode button text */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Match general dark mode button shadow */
+}
+
+.dark-mode #focus-toggle:hover,
+.dark-mode #video-url-button:hover {
+    background-color: #333; /* Gray color on hover in dark mode */
+}
+
 /* Wallpaper Preview */
 #wallpaper-preview {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
 }
 .wallpaper-thumb {
     width: 150px; 
@@ -268,9 +315,7 @@ input:checked + .slider:before {
     margin-top: 20px;
     padding: 10px;
     color: #333;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 4px;
-    border: 2px solid white;
+    background: rgba(205, 204, 204, 0.5);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: background 0.3s ease, color 0.3s ease;
 }
@@ -293,7 +338,7 @@ input:checked + .slider:before {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #4a90e2;
+    background-color: var(--primary-color); /* Updated from #4a90e2 */
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -302,7 +347,7 @@ input:checked + .slider:before {
 }
 
 #video-url-button:hover {
-    background-color: #357ab8;
+    background-color: var(--primary-color-darker); /* Updated from #357ab8 */
     transform: scale(1.05);
 }
 
@@ -342,7 +387,7 @@ input:checked + .slider:before {
 
 #focus-toggle {
     padding: 10px 20px;
-    background-color: #4a90e2;
+    background-color: var(--primary-color); /* Updated from #4a90e2 */
     color: #fff;
     border: none;
     border-radius: 25px;
@@ -353,7 +398,7 @@ input:checked + .slider:before {
 }
 
 #focus-toggle:hover {
-    background-color: #357ab8;
+    background-color: var(--primary-color-darker); /* Updated from #357ab8 */
     transform: translateY(-2px);
 }
 
@@ -382,7 +427,7 @@ body.focus-mode #timer {
 #timer {
     font-size: 56px;
     margin: 25px 0;
-    color: #357ab8;
+    color: var(--primary-color); /* Updated from #357ab8 */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -410,4 +455,17 @@ body.focus-mode #timer {
 /* Smoother Transitions */
 .sections-container {
     transition: all 0.3s ease;
+}
+#wallpaper-category {
+    margin: 5px 0;
+    padding: 5px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+#wallpaper-category:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px);
 }
