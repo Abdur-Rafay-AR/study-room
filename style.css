@@ -66,7 +66,7 @@ h1, h2, label {
 }
 
 .dark-mode #timer {
-    color: var(--primary-color-lighter);
+    color: #fff;
 }
 
 button, #video-url-button, #focus-toggle {
@@ -249,7 +249,7 @@ section:hover {
     border-radius: 50%;
 }
 input:checked + .slider {
-    background-color: #4a90e2;
+    background-color: #121212;
 }
 input:checked + .slider:before {
     transform: translateX(26px);
@@ -272,6 +272,18 @@ input:checked + .slider:before {
     color: #e0e0e0;
     border: none;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode #focus-toggle,
+.dark-mode #video-url-button {
+    background-color: #333; /* Match general dark mode button */
+    color: #e0e0e0;         /* Match general dark mode button text */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Match general dark mode button shadow */
+}
+
+.dark-mode #focus-toggle:hover,
+.dark-mode #video-url-button:hover {
+    background-color: #333; /* Gray color on hover in dark mode */
 }
 
 /* Wallpaper Preview */
@@ -299,44 +311,11 @@ input:checked + .slider:before {
     transform: scale(1.05);
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--primary-color-darker);
-}
-
-.dark-mode ::-webkit-scrollbar {
-    background: #2d2d2d;
-}
-
-.dark-mode ::-webkit-scrollbar-thumb {
-    background: #555;
-}
-
-.dark-mode ::-webkit-scrollbar-thumb:hover {
-    background: #777;
-}
-
 .footer {
     margin-top: 20px;
     padding: 10px;
     color: #333;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 4px;
-    border: 2px solid white;
+    background: rgba(205, 204, 204, 0.5);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: background 0.3s ease, color 0.3s ease;
 }
