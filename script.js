@@ -143,6 +143,15 @@ function updateModeDisplay() {
   if (modeDisplay) {
     modeDisplay.textContent = modeNames[timerMode];
   }
+  
+  // Update mode button states
+  const modeButtons = document.querySelectorAll('.mode-btn');
+  modeButtons.forEach(btn => btn.classList.remove('active'));
+  
+  const activeMode = timerMode === 'study' ? 0 : timerMode === 'shortBreak' ? 1 : 2;
+  if (modeButtons[activeMode]) {
+    modeButtons[activeMode].classList.add('active');
+  }
 }
 
 function updateTimerButtons() {
@@ -486,63 +495,14 @@ function toggleMode() {
 }
 
 function updateDarkModeElements(isDarkMode) {
-  // Update timer colors
-  const timer = document.getElementById('timer');
-  const timerMode = document.getElementById('timer-mode');
-  const sessionCounter = document.getElementById('session-counter');
+  // The new CSS handles dark mode automatically via CSS variables
+  // This function can be simplified or removed as the new design 
+  // uses CSS custom properties for theming
   
-  if (isDarkMode) {
-    if (timer) timer.style.color = '#e0e0e0';
-    if (timerMode) timerMode.style.color = '#e0e0e0';
-    if (sessionCounter) sessionCounter.style.color = '#e0e0e0';
-  } else {
-    if (timer) timer.style.color = '';
-    if (timerMode) timerMode.style.color = '';
-    if (sessionCounter) sessionCounter.style.color = '';
-  }
-  
-  // Update section backgrounds
-  const sections = document.querySelectorAll('section');
-  sections.forEach(section => {
-    if (isDarkMode) {
-      section.style.background = 'rgba(30, 30, 30, 0.8)';
-      section.style.color = '#e0e0e0';
-    } else {
-      section.style.background = '';
-      section.style.color = '';
-    }
-  });
-  
-  // Update header
-  const header = document.querySelector('header');
-  if (header) {
-    if (isDarkMode) {
-      header.style.background = 'linear-gradient(135deg, rgba(51, 51, 51, 0.8), rgba(85, 85, 85, 0.8))';
-      header.style.color = '#e0e0e0';
-    } else {
-      header.style.background = '';
-      header.style.color = '';
-    }
-  }
-  
-  // Update footer
-  const footer = document.querySelector('.footer');
-  if (footer) {
-    footer.classList.toggle('dark-mode', isDarkMode);
-  }
-  
-  // Update all inputs and textareas
-  const inputs = document.querySelectorAll('input, textarea, select');
-  inputs.forEach(input => {
-    if (isDarkMode) {
-      input.style.background = 'rgba(255, 255, 255, 0.1)';
-      input.style.color = '#e0e0e0';
-      input.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-    } else {
-      input.style.background = '';
-      input.style.color = '';
-      input.style.borderColor = '';
-    }
+  // Update any remaining elements that need manual JS control
+  const elementsToUpdate = document.querySelectorAll('input, textarea, select');
+  elementsToUpdate.forEach(element => {
+    // The CSS handles styling, but we can add focus states here if needed
   });
 }
 
@@ -695,5 +655,46 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       document.body.classList.remove('transition-mode');
     }, 500);
+  });
+  
+  // Initialize mode button states
+  updateModeDisplay();
+  
+  // Add enhanced keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.target.matches('input, textarea')) return; // Don't override input focus
+    
+    switch(e.key) {
+      case '1':
+        setStudyMode();
+        break;
+      case '2':
+        setShortBreak();
+        break;
+      case '3':
+        setLongBreak();
+        break;
+    }
+  });
+  
+  // Add smooth scrolling for better UX
+  document.documentElement.style.scrollBehavior = 'smooth';
+  
+  // Enhanced focus management
+  const focusableElements = document.querySelectorAll(
+    'button, input, textarea, select, [tabindex]:not([tabindex="-1"])'
+  );
+  
+  // Add visual feedback for keyboard navigation
+  focusableElements.forEach(element => {
+    element.addEventListener('focus', () => {
+      element.style.outline = `2px solid var(--primary-color)`;
+      element.style.outlineOffset = '2px';
+    });
+    
+    element.addEventListener('blur', () => {
+      element.style.outline = '';
+      element.style.outlineOffset = '';
+    });
   });
 });
