@@ -198,10 +198,24 @@
             </div>
           </div>
           <div class="setting-item theme-setting">
-            <label for="theme-hue-slider">Theme Color</label>
+            <label>Theme Color</label>
             <div class="theme-controls">
-              <input type="range" id="theme-hue-slider" min="0" max="360" value="210" class="hue-slider">
-              <span id="hue-preview" class="hue-preview"></span>
+              <div class="theme-row">
+                <span class="theme-label">Hue</span>
+                <input type="range" id="theme-hue-slider" min="0" max="360" value="210" class="hue-slider">
+              </div>
+              <div class="theme-row">
+                <span class="theme-label">Saturation</span>
+                <input type="range" id="theme-saturation-slider" min="0" max="100" value="70" class="saturation-slider">
+              </div>
+              <div class="theme-row">
+                <span class="theme-label">Lightness</span>
+                <input type="range" id="theme-lightness-slider" min="0" max="100" value="55" class="lightness-slider">
+              </div>
+              <div class="theme-row">
+                <span class="theme-label">Preview</span>
+                <span id="hue-preview" class="hue-preview"></span>
+              </div>
             </div>
           </div>
         </div>

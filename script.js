@@ -213,17 +213,22 @@ function updateBackgroundColor() {
 
   const hslColor = hexToHsl(color);
   if (hslColor) {
-    const newHue = Math.round(hslColor.h);
-    document.documentElement.style.setProperty('--primary-hue', newHue);
-    
     const hueSlider = document.getElementById('theme-hue-slider');
-    if (hueSlider) {
-      hueSlider.value = newHue;
-    }
+    const saturationSlider = document.getElementById('theme-saturation-slider');
+    const lightnessSlider = document.getElementById('theme-lightness-slider');
+    
+    if (hueSlider) hueSlider.value = Math.round(hslColor.h);
+    if (saturationSlider) saturationSlider.value = Math.round(hslColor.s);
+    if (lightnessSlider) lightnessSlider.value = Math.round(hslColor.l);
+    
+    // Update CSS properties
+    document.documentElement.style.setProperty('--primary-hue', Math.round(hslColor.h));
+    document.documentElement.style.setProperty('--primary-saturation', `${Math.round(hslColor.s)}%`);
+    document.documentElement.style.setProperty('--primary-lightness', `${Math.round(hslColor.l)}%`);
     
     const huePreview = document.getElementById('hue-preview');
     if (huePreview) {
-      huePreview.style.backgroundColor = `hsl(${newHue}, var(--primary-saturation), var(--primary-lightness))`;
+      huePreview.style.backgroundColor = color;
     }
   }
 }
@@ -607,24 +612,67 @@ document.addEventListener("DOMContentLoaded", () => {
   // Load wallpapers
   loadWallpapers();
 
-  // Theme Hue Slider Functionality
+  // Enhanced Theme Controls with full color range support
   const hueSlider = document.getElementById('theme-hue-slider');
+  const saturationSlider = document.getElementById('theme-saturation-slider');
+  const lightnessSlider = document.getElementById('theme-lightness-slider');
   const huePreview = document.getElementById('hue-preview');
 
-  function updateThemeHue(hueValue) {
-    document.documentElement.style.setProperty('--primary-hue', hueValue);
+  function updateThemeColor() {
+    const hue = hueSlider ? hueSlider.value : 210;
+    const saturation = saturationSlider ? saturationSlider.value : 70;
+    const lightness = lightnessSlider ? lightnessSlider.value : 55;
+    
+    // Update CSS custom properties
+    document.documentElement.style.setProperty('--primary-hue', hue);
+    document.documentElement.style.setProperty('--primary-saturation', `${saturation}%`);
+    document.documentElement.style.setProperty('--primary-lightness', `${lightness}%`);
+    
+    // Update preview
     if (huePreview) {
-      const saturation = getComputedStyle(document.documentElement).getPropertyValue('--primary-saturation').trim();
-      const lightness = getComputedStyle(document.documentElement).getPropertyValue('--primary-lightness').trim();
-      huePreview.style.backgroundColor = `hsl(${hueValue}, ${saturation}, ${lightness})`;
+      huePreview.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    }
+    
+    // Update saturation slider background
+    if (saturationSlider) {
+      const baseColor = `hsl(${hue}, 100%, ${lightness}%)`;
+      const grayColor = `hsl(${hue}, 0%, ${lightness}%)`;
+      saturationSlider.style.background = `linear-gradient(90deg, ${grayColor}, ${baseColor})`;
+    }
+    
+    // Save theme settings
+    localStorage.setItem('themeSettings', JSON.stringify({
+      hue: parseInt(hue),
+      saturation: parseInt(saturation),
+      lightness: parseInt(lightness)
+    }));
+  }
+
+  function loadThemeSettings() {
+    const savedTheme = JSON.parse(localStorage.getItem('themeSettings'));
+    if (savedTheme) {
+      if (hueSlider) hueSlider.value = savedTheme.hue || 210;
+      if (saturationSlider) saturationSlider.value = savedTheme.saturation || 70;
+      if (lightnessSlider) lightnessSlider.value = savedTheme.lightness || 55;
+      updateThemeColor();
+    } else {
+      // Initialize with default values
+      updateThemeColor();
     }
   }
 
+  // Initialize theme controls
+  loadThemeSettings();
+
+  // Add event listeners for theme controls
   if (hueSlider) {
-    updateThemeHue(hueSlider.value);
-    hueSlider.addEventListener('input', (event) => {
-      updateThemeHue(event.target.value);
-    });
+    hueSlider.addEventListener('input', updateThemeColor);
+  }
+  if (saturationSlider) {
+    saturationSlider.addEventListener('input', updateThemeColor);
+  }
+  if (lightnessSlider) {
+    lightnessSlider.addEventListener('input', updateThemeColor);
   }
 
   // Event listeners

@@ -248,6 +248,18 @@ input:checked + .slider:before {
     margin-bottom: var(--spacing-xl);
 }
 
+.save-settings-btn {
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
 .control-btn {
     padding: var(--spacing-md) var(--spacing-xl);
     border: none;
@@ -745,20 +757,41 @@ input:checked + .slider:before {
 
 .theme-controls {
     display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.theme-row {
+    display: flex;
     align-items: center;
     gap: var(--spacing-md);
 }
 
-.hue-slider {
+.hue-slider,
+.saturation-slider,
+.lightness-slider {
     flex: 1;
     -webkit-appearance: none;
     height: 6px;
     border-radius: 3px;
-    background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
     cursor: pointer;
 }
 
-.hue-slider::-webkit-slider-thumb {
+.hue-slider {
+    background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+}
+
+.saturation-slider {
+    background: linear-gradient(90deg, #808080, var(--primary-color));
+}
+
+.lightness-slider {
+    background: linear-gradient(90deg, #000000, #808080, #ffffff);
+}
+
+.hue-slider::-webkit-slider-thumb,
+.saturation-slider::-webkit-slider-thumb,
+.lightness-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 20px;
     height: 20px;
@@ -770,27 +803,19 @@ input:checked + .slider:before {
 }
 
 .hue-preview {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     border: 2px solid var(--border-color);
     transition: var(--transition);
+    flex-shrink: 0;
 }
 
-.save-settings-btn {
-    width: 100%;
-    padding: var(--spacing-md);
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius);
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.save-settings-btn:hover {
-    background: var(--primary-color-darker);
+.theme-label {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    min-width: 60px;
+    text-align: left;
 }
 
 /* Utility Classes */
