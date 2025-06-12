@@ -151,6 +151,28 @@
                   <option value="anime">Anime</option>
                 </select>
               </div>
+
+              <div class="effect-group">
+                <label>Background Effects</label>
+                <div class="effect-controls">
+                  <div class="blur-control">
+                    <label for="blur-slider">Blur Intensity</label>
+                    <input type="range" id="blur-slider" min="0" max="20" value="0" onchange="updateBackgroundBlur()">
+                    <span id="blur-value">0px</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="glass-mode-group">
+                <label>Glass Mode</label>
+                <div class="glass-toggle">
+                  <label class="switch">
+                    <input type="checkbox" id="glass-mode-toggle" onchange="toggleGlassMode()">
+                    <span class="slider round"></span>
+                  </label>
+                  <span id="glass-mode-label">Disabled</span>
+                </div>
+              </div>
             </div>
             
             <div id="wallpaper-preview" class="wallpaper-grid"></div>

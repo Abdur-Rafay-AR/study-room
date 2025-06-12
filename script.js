@@ -285,6 +285,7 @@ const wallpaperCategories = {
     'https://get.wallhere.com/photo/landscape-digital-art-fantasy-art-sunset-night-anime-stars-evening-moonlight-atmosphere-Aurora-midnight-darkness-screenshot-computer-wallpaper-geological-phenomenon-52613.png',
     'https://wallpapercat.com/w/full/1/7/0/25940-3840x2160-desktop-4k-attack-on-titan-the-final-season-wallpaper-image.jpg',
     'https://i.pinimg.com/originals/7a/c7/1e/7ac71e72373b0fb270b3a6d72e44eea3.gif',
+    'https://i.imgur.com/UmZUS1k.png',
   ],
 };
 
@@ -314,11 +315,109 @@ function loadWallpapers() {
   }, 500);
 }
 
+// -------------------------
+// Background Blur Functionality
+// -------------------------
+function updateBackgroundBlur() {
+  const blurSlider = document.getElementById('blur-slider');
+  const blurValue = document.getElementById('blur-value');
+  const blurIntensity = blurSlider.value;
+  
+  blurValue.textContent = `${blurIntensity}px`;
+  
+  if (blurIntensity > 0) {
+    document.body.classList.add('background-blur');
+    document.documentElement.style.setProperty('--bg-blur-intensity', `${blurIntensity}px`);
+  } else {
+    document.body.classList.remove('background-blur');
+    document.documentElement.style.setProperty('--bg-blur-intensity', '0px');
+  }
+  
+  // Save blur setting
+  localStorage.setItem('backgroundBlur', blurIntensity);
+  
+  if (blurIntensity > 0) {
+    showNotification(`Background blur set to ${blurIntensity}px`, 'success');
+  }
+}
+
+function loadBackgroundBlur() {
+  const savedBlur = localStorage.getItem('backgroundBlur');
+  if (savedBlur !== null) {
+    const blurSlider = document.getElementById('blur-slider');
+    const blurValue = document.getElementById('blur-value');
+    
+    if (blurSlider) blurSlider.value = savedBlur;
+    if (blurValue) blurValue.textContent = `${savedBlur}px`;
+    
+    if (savedBlur > 0) {
+      document.body.classList.add('background-blur');
+      document.documentElement.style.setProperty('--bg-blur-intensity', `${savedBlur}px`);
+    }
+  }
+}
+
+// -------------------------
+// Glass Mode Functionality
+// -------------------------
+function toggleGlassMode() {
+  const glassModeToggle = document.getElementById('glass-mode-toggle');
+  const glassModeLabel = document.getElementById('glass-mode-label');
+  const isGlassMode = glassModeToggle.checked;
+  
+  if (isGlassMode) {
+    document.body.classList.add('glass-mode');
+    glassModeLabel.textContent = 'Enabled';
+    showNotification('Glass mode enabled', 'success');
+  } else {
+    document.body.classList.remove('glass-mode');
+    glassModeLabel.textContent = 'Disabled';
+    showNotification('Glass mode disabled', 'info');
+  }
+  
+  // Save glass mode setting
+  localStorage.setItem('glassMode', isGlassMode);
+}
+
+function loadGlassMode() {
+  const savedGlassMode = localStorage.getItem('glassMode') === 'true';
+  const glassModeToggle = document.getElementById('glass-mode-toggle');
+  const glassModeLabel = document.getElementById('glass-mode-label');
+  
+  if (savedGlassMode) {
+    document.body.classList.add('glass-mode');
+    if (glassModeToggle) glassModeToggle.checked = true;
+    if (glassModeLabel) glassModeLabel.textContent = 'Enabled';
+  }
+}
+
+// -------------------------
+// Enhanced Wallpaper Application
+// -------------------------
 function applyWallpaper(url) {
   document.body.style.background = `url('${url}') no-repeat center center fixed`;
   document.body.style.backgroundSize = 'cover';
   document.body.classList.add('wallpaper-applied');
-  showNotification('Wallpaper applied successfully!', 'success');
+  
+  // If glass mode is enabled, the wallpaper will show through the glass effect
+  const isGlassMode = document.body.classList.contains('glass-mode');
+  if (isGlassMode) {
+    showNotification('Wallpaper applied with glass effect!', 'success');
+  } else {
+    showNotification('Wallpaper applied successfully!', 'success');
+  }
+  
+  // Save wallpaper setting
+  localStorage.setItem('currentWallpaper', url);
+}
+
+function loadWallpaper() {
+  const savedWallpaper = localStorage.getItem('currentWallpaper');
+  if (savedWallpaper) {
+    document.body.style.background = `url('${savedWallpaper}') no-repeat center center fixed`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.classList.add('wallpaper-applied');
+  }
 }
 
 // -------------------------
@@ -590,12 +689,17 @@ document.addEventListener("DOMContentLoaded", () => {
   renderTodos();
   renderNotes();
   
+  // Load customization settings
+  loadBackgroundBlur();
+  loadGlassMode();
+  loadWallpaper();
+  
   // Load saved theme and apply it properly
   const savedDarkMode = localStorage.getItem('darkMode') === 'true';
   if (savedDarkMode) {
     document.body.classList.add('dark-mode');
     document.getElementById('mode-toggle').checked = true;
-    document.getElementById('mode-label').innerText = 'Dark Mode';
+    document.getElementById('mode_label').innerText = 'Dark Mode';
     
     // Force update all elements to ensure proper dark mode sync
     setTimeout(() => {
@@ -745,4 +849,55 @@ document.addEventListener("DOMContentLoaded", () => {
       element.style.outlineOffset = '';
     });
   });
+  
+  // Auto-save customization settings
+  setInterval(() => {
+    saveCustomizationSettings();
+  }, 30000);
 });
+
+// -------------------------
+// Customization Settings
+// -------------------------
+function saveCustomizationSettings() {
+  const settings = {
+    backgroundBlur: document.getElementById('blur-slider')?.value || '0',
+    glassMode: document.getElementById('glass-mode-toggle')?.checked || false,
+    currentWallpaper: localStorage.getItem('currentWallpaper') || null,
+    backgroundColor: document.getElementById('bg-color-picker')?.value || '#ffffff'
+  };
+  
+  localStorage.setItem('customizationSettings', JSON.stringify(settings));
+}
+
+function loadCustomizationSettings() {
+  const savedSettings = JSON.parse(localStorage.getItem('customizationSettings'));
+  if (savedSettings) {
+    // Load blur settings
+    if (savedSettings.backgroundBlur) {
+      const blurSlider = document.getElementById('blur-slider');
+      if (blurSlider) {
+        blurSlider.value = savedSettings.backgroundBlur;
+        updateBackgroundBlur();
+      }
+    }
+    
+    // Load glass mode
+    if (savedSettings.glassMode) {
+      const glassModeToggle = document.getElementById('glass-mode-toggle');
+      if (glassModeToggle) {
+        glassModeToggle.checked = savedSettings.glassMode;
+        toggleGlassMode();
+      }
+    }
+    
+    // Load background color
+    if (savedSettings.backgroundColor) {
+      const bgColorPicker = document.getElementById('bg-color-picker');
+      if (bgColorPicker) {
+        bgColorPicker.value = savedSettings.backgroundColor;
+        updateBackgroundColor();
+      }
+    }
+  }
+}

@@ -670,8 +670,6 @@ input:checked + .slider:before {
     cursor: pointer;
     transition: var(--transition);
     border: 2px solid transparent;
-    width: 100%;
-    height: auto;
 }
 
 /* Settings Panel */
@@ -1072,4 +1070,250 @@ body.focus-mode #timer {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--text-tertiary);
+}
+
+/* Glass Mode Styles */
+.glass-mode .card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.glass-mode.dark-mode .card {
+    background: rgba(17, 24, 39, 0.3);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+.glass-mode .timer-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.glass-mode.dark-mode .timer-card {
+    background: rgba(17, 24, 39, 0.4);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.glass-mode .main-header {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-mode.dark-mode .main-header {
+    background: rgba(17, 24, 39, 0.8);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-mode .settings-panel {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-mode.dark-mode .settings-panel {
+    background: rgba(17, 24, 39, 0.3);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Glass Mode Input Styles */
+.glass-mode input,
+.glass-mode textarea,
+.glass-mode select {
+    background: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: var(--text-primary);
+}
+
+.glass-mode.dark-mode input,
+.glass-mode.dark-mode textarea,
+.glass-mode.dark-mode select {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-mode input:focus,
+.glass-mode textarea:focus,
+.glass-mode select:focus {
+    background: rgba(255, 255, 255, 0.25) !important;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(var(--primary-hue), var(--primary-saturation), var(--primary-lightness), 0.2);
+}
+
+/* Background Blur */
+body.background-blur {
+    position: relative;
+}
+
+body.background-blur::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    filter: blur(var(--bg-blur-intensity, 0px));
+    z-index: -1;
+}
+
+/* Customization Section Updates */
+.customization-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.effect-group,
+.glass-mode-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.effect-group label,
+.glass-mode-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.effect-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.blur-control {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.blur-control label {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+}
+
+.blur-control input[type="range"] {
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--bg-secondary), var(--primary-color));
+    cursor: pointer;
+    outline: none;
+}
+
+.blur-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    border: 2px solid white;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+}
+
+.blur-control input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    border: 2px solid white;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+}
+
+#blur-value {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: var(--spacing-xs);
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    margin-top: var(--spacing-sm);
+}
+
+.glass-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+#glass-mode-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Enhanced Glass Effects for Specific Elements */
+.glass-mode .task-list li,
+.glass-mode .notes-list li {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-mode.dark-mode .task-list li,
+.glass-mode.dark-mode .notes-list li {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-mode .mode-controls {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-mode.dark-mode .mode-controls {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-mode .wallpaper-grid {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-mode.dark-mode .wallpaper-grid {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Progress Bar Glass Effect */
+.glass-mode #timer-progress-container,
+.glass-mode #daily-progress-container {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-mode.dark-mode #timer-progress-container,
+.glass-mode.dark-mode #daily-progress-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive Updates */
+@media (max-width: 768px) {
+    .customization-grid {
+        grid-template-columns: 1fr;
+    }
 }
