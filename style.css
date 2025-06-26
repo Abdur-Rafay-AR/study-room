@@ -1071,7 +1071,6 @@ input:checked + .slider:before {
 .lightness-slider {
     background: linear-gradient(90deg, #000000, #808080, #ffffff);
 }
-
 .hue-slider::-webkit-slider-thumb,
 .saturation-slider::-webkit-slider-thumb,
 .lightness-slider::-webkit-slider-thumb {
@@ -2146,8 +2145,14 @@ body.navbar-open {
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.glass-mode .theme-controls {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 /* Glass Mode Input Styles */
-.glass-mode input,
+.glass-mode input:not([type="range"]),
 .glass-mode textarea,
 .glass-mode select {
     background: rgba(255, 255, 255, 0.2) !important;
@@ -2156,7 +2161,7 @@ body.navbar-open {
     color: var(--text-primary);
 }
 
-.glass-mode.dark-mode input,
+.glass-mode.dark-mode input:not([type="range"]),
 .glass-mode.dark-mode textarea,
 .glass-mode.dark-mode select {
     background: rgba(255, 255, 255, 0.1) !important;
@@ -2164,7 +2169,7 @@ body.navbar-open {
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.glass-mode input:focus,
+.glass-mode input:not([type="range"]):focus,
 .glass-mode textarea:focus,
 .glass-mode select:focus {
     background: rgba(255, 255, 255, 0.25) !important;
