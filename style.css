@@ -2568,3 +2568,49 @@ body.background-blur::before {
     height: 250px;
   }
 }
+
+
+/* Color Picker Styling */
+#bg-color-picker {
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  outline: none;
+  overflow: hidden;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+#bg-color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+#bg-color-picker::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+  margin: 0;
+}
+
+#bg-color-picker::-moz-color-swatch {
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+  margin: 0;
+}
+
+#bg-color-picker:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
+}
+
+#bg-color-picker:focus {
+  box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.3);
+}
