@@ -381,9 +381,13 @@
           break;
       }
 
-      // Close navbar after navigation on mobile
-      if (window.innerWidth <= 768) {
-        toggleNavbar();
+      // Close navbar after navigation (for all screen sizes)
+      const navbar = document.getElementById('navbar');
+      const overlay = document.getElementById('navbar-overlay');
+      if (navbar && navbar.classList.contains('open')) {
+        navbar.classList.remove('open');
+        overlay.classList.remove('active');
+        document.body.classList.remove('navbar-open');
       }
     }
 

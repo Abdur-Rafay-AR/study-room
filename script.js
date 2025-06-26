@@ -358,15 +358,128 @@ function loadWallpapers() {
 }
 
 // -------------------------
+// Glass Mode Functionality
+// -------------------------
+function toggleGlassMode() {
+  // Get all glass mode toggles on the page
+  const glassModeToggles = [
+    document.getElementById('glass-mode-toggle-customize'),
+    document.getElementById('glass-mode-toggle-settings')
+  ];
+  
+  const glassModeLabels = [
+    document.getElementById('glass-mode-label-customize'),
+    document.getElementById('glass-mode-label-settings')
+  ];
+  
+  // Get the current state from the element that triggered the change
+  let isGlassMode = false;
+  const activeToggle = event?.target || glassModeToggles.find(toggle => toggle?.checked);
+  
+  if (activeToggle) {
+    isGlassMode = activeToggle.checked;
+  } else {
+    // Fallback: check if glass mode class exists
+    isGlassMode = !document.body.classList.contains('glass-mode');
+  }
+  
+  // Apply glass mode to body
+  if (isGlassMode) {
+    document.body.classList.add('glass-mode');
+    showNotification('Glass mode enabled', 'success');
+  } else {
+    document.body.classList.remove('glass-mode');
+    showNotification('Glass mode disabled', 'info');
+  }
+  
+  // Sync all toggles and labels
+  glassModeToggles.forEach(toggle => {
+    if (toggle) toggle.checked = isGlassMode;
+  });
+  
+  glassModeLabels.forEach(label => {
+    if (label) label.textContent = isGlassMode ? 'Enabled' : 'Disabled';
+  });
+  
+  // Save glass mode setting
+  localStorage.setItem('glassMode', isGlassMode);
+}
+
+function loadGlassMode() {
+  const savedGlassMode = localStorage.getItem('glassMode') === 'true';
+  
+  const glassModeToggles = [
+    document.getElementById('glass-mode-toggle-customize'),
+    document.getElementById('glass-mode-toggle-settings')
+  ];
+  
+  const glassModeLabels = [
+    document.getElementById('glass-mode-label-customize'),
+    document.getElementById('glass-mode-label-settings')
+  ];
+  
+  if (savedGlassMode) {
+    document.body.classList.add('glass-mode');
+    
+    // Update all toggles and labels
+    glassModeToggles.forEach(toggle => {
+      if (toggle) toggle.checked = true;
+    });
+    
+    glassModeLabels.forEach(label => {
+      if (label) label.textContent = 'Enabled';
+    });
+  } else {
+    document.body.classList.remove('glass-mode');
+    
+    // Update all toggles and labels
+    glassModeToggles.forEach(toggle => {
+      if (toggle) toggle.checked = false;
+    });
+    
+    glassModeLabels.forEach(label => {
+      if (label) label.textContent = 'Disabled';
+    });
+  }
+}
+
+// -------------------------
 // Background Blur Functionality
 // -------------------------
 function updateBackgroundBlur() {
-  const blurSlider = document.getElementById('blur-slider');
-  const blurValue = document.getElementById('blur-value');
-  const blurIntensity = blurSlider.value;
+  // Get blur sliders from both customize and settings sections
+  const blurSliders = [
+    document.getElementById('blur-slider-customize'),
+    document.getElementById('blur-slider-settings')
+  ];
   
-  blurValue.textContent = `${blurIntensity}px`;
+  const blurValues = [
+    document.getElementById('blur-value-customize'),
+    document.getElementById('blur-value-settings')
+  ];
   
+  // Get the current blur intensity from the active slider
+  let blurIntensity = 0;
+  const activeSlider = blurSliders.find(slider => slider && document.activeElement === slider);
+  
+  if (activeSlider) {
+    blurIntensity = activeSlider.value;
+  } else {
+    // Use the first available slider value
+    const slider = blurSliders.find(slider => slider);
+    if (slider) blurIntensity = slider.value;
+  }
+  
+  // Sync all sliders and value displays
+  blurSliders.forEach(slider => {
+    if (slider) slider.value = blurIntensity;
+  });
+  
+  blurValues.forEach(value => {
+    if (value) value.textContent = `${blurIntensity}px`;
+  });
+  
+  // Apply blur effect
   if (blurIntensity > 0) {
     document.body.classList.add('background-blur');
     document.documentElement.style.setProperty('--bg-blur-intensity', `${blurIntensity}px`);
@@ -386,50 +499,29 @@ function updateBackgroundBlur() {
 function loadBackgroundBlur() {
   const savedBlur = localStorage.getItem('backgroundBlur');
   if (savedBlur !== null) {
-    const blurSlider = document.getElementById('blur-slider');
-    const blurValue = document.getElementById('blur-value');
+    const blurSliders = [
+      document.getElementById('blur-slider-customize'),
+      document.getElementById('blur-slider-settings')
+    ];
     
-    if (blurSlider) blurSlider.value = savedBlur;
-    if (blurValue) blurValue.textContent = `${savedBlur}px`;
+    const blurValues = [
+      document.getElementById('blur-value-customize'),
+      document.getElementById('blur-value-settings')
+    ];
+    
+    // Update all sliders and values
+    blurSliders.forEach(slider => {
+      if (slider) slider.value = savedBlur;
+    });
+    
+    blurValues.forEach(value => {
+      if (value) value.textContent = `${savedBlur}px`;
+    });
     
     if (savedBlur > 0) {
       document.body.classList.add('background-blur');
       document.documentElement.style.setProperty('--bg-blur-intensity', `${savedBlur}px`);
     }
-  }
-}
-
-// -------------------------
-// Glass Mode Functionality
-// -------------------------
-function toggleGlassMode() {
-  const glassModeToggle = document.getElementById('glass-mode-toggle');
-  const glassModeLabel = document.getElementById('glass-mode-label');
-  const isGlassMode = glassModeToggle.checked;
-  
-  if (isGlassMode) {
-    document.body.classList.add('glass-mode');
-    glassModeLabel.textContent = 'Enabled';
-    showNotification('Glass mode enabled', 'success');
-  } else {
-    document.body.classList.remove('glass-mode');
-    glassModeLabel.textContent = 'Disabled';
-    showNotification('Glass mode disabled', 'info');
-  }
-  
-  // Save glass mode setting
-  localStorage.setItem('glassMode', isGlassMode);
-}
-
-function loadGlassMode() {
-  const savedGlassMode = localStorage.getItem('glassMode') === 'true';
-  const glassModeToggle = document.getElementById('glass-mode-toggle');
-  const glassModeLabel = document.getElementById('glass-mode-label');
-  
-  if (savedGlassMode) {
-    document.body.classList.add('glass-mode');
-    if (glassModeToggle) glassModeToggle.checked = true;
-    if (glassModeLabel) glassModeLabel.textContent = 'Enabled';
   }
 }
 
