@@ -751,6 +751,20 @@ input:checked + .slider:before {
     cursor: pointer;
 }
 
+/* Fix for wallpaper category dropdown in dark glass mode */
+.dark-mode.glass-mode #wallpaper-category {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode.glass-mode #wallpaper-category option {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    opacity: 0.4;
+}
+
+
 /* Wallpaper Grid Updates */
 .wallpaper-grid {
     display: flex;
