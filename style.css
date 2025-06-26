@@ -80,8 +80,6 @@ body {
 }
 
 .header-content {
-    max-width: 1200px;
-    margin: 0 auto;
     padding: var(--spacing-lg) var(--spacing-xl);
     display: flex;
     justify-content: space-between;
@@ -1345,15 +1343,25 @@ input:checked + .slider:before {
     margin-top: var(--spacing-2xl);
     padding: var(--spacing-xl);
     text-align: center;
-    color: var(--text-tertiary);
-    font-size: 0.875rem;
+    color: #121212;
+    background-color: var(--bg-primary);
+    opacity: 0.8;
+    font-size: 1rem;
     border-top: 1px solid var(--border-color);
 }
 
+.dark-mode .footer {
+    background-color: var(--bg-primary);
+    color: #f3f4f6;
+    opacity: 0.9;
+}
+
 .footer a {
-    color: var(--primary-color);
+    color: var(--primary-color-darker);
     text-decoration: none;
     transition: var(--transition);
+    text-shadow: #000000;
+    
 }
 
 .footer a:hover {
@@ -1871,7 +1879,7 @@ body.focus-mode .floating-music-btn {
     color: var(--primary-color);
     border: 1px solid hsla(var(--primary-hue), var(--primary-saturation), var(--primary-lightness), 0.3);
     box-shadow: 
-        0 4px 12px hsla(var(--primary-hue), var(--primary-saturation), var(--primary-lightness), 0.1),
+        0 4px 12px hsla(var(--primary-hue), var(--primary-saturation), var(--primary-lightness), 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
@@ -1881,18 +1889,11 @@ body.focus-mode .floating-music-btn {
 .header-left {
     display: flex;
     align-items: center;
-    margin-left: 0; /* Ensure it starts at the very left */
-    padding-left: 20px; /* Add padding from the edge of the viewport */
 }
 
 /* Additional styles to ensure proper positioning */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 0; /* Remove default padding to control spacing manually */
-}
+/* The .header rule has been removed */
+
 /* Body padding when navbar is open */
 body.navbar-open {
     overflow: hidden;
@@ -2648,6 +2649,16 @@ body.background-blur::before {
   border: none;
   border-radius: 50%;
   padding: 0;
+  margin: 0;
+}
+
+#bg-color-picker:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
+}
+
+#bg-color-picker:focus {
+  box-shadow: 0 0 0 3px hsla(var(--primary-hue), var(--primary-saturation), var(--primary-lightness), 0.3);
   margin: 0;
 }
 
