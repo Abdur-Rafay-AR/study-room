@@ -68,7 +68,7 @@ function pauseTimer() {
 }
 
 function resetTimer() {
-  isPaused = true;a
+  isPaused = true;
   clearInterval(timerInterval);
   timeLeft = getCurrentModeDuration();
   updateTimerDisplay();
@@ -1275,14 +1275,15 @@ function exportAllData() {
   try {
     // Get current date and time for the export
     const now = new Date();
-    const exportDate = now.toLocaleString();
+    const exportDate = now.toISOString();
     
     // Collect all data from localStorage
     const exportData = {
       exportInfo: {
         date: exportDate,
         version: '1.0',
-        description: 'Personal Study Room Data Export'
+        description: 'Personal Study Room Data Export',
+        appName: 'Personal Study Room'
       },
       todos: JSON.parse(localStorage.getItem('todos') || '[]'),
       notes: JSON.parse(localStorage.getItem('notes') || '[]'),
@@ -1298,130 +1299,39 @@ function exportAllData() {
       }
     };
     
-    // Format data as readable text
-    const formattedData = formatDataForExport(exportData);
+    // Create and download JSON file
+    const jsonString = JSON.stringify(exportData, null, 2);
+    const filename = `StudyRoom_Data_${now.toISOString().split('T')[0]}.json`;
+    downloadTextFile(jsonString, filename);
     
-    // Create and download file
-    downloadTextFile(formattedData, `StudyRoom_Data_${now.toISOString().split('T')[0]}.txt`);
-    
-    showNotification('Data exported successfully!', 'success');
+    showNotification('Data exported successfully as JSON!', 'success');
   } catch (error) {
     console.error('Export failed:', error);
     showNotification('Failed to export data', 'error');
   }
 }
 
-function formatDataForExport(data) {
-  let output = '';
-  
-  // Header
-  output += '='.repeat(60) + '\n';
-  output += '           PERSONAL STUDY ROOM - DATA EXPORT\n';
-  output += '='.repeat(60) + '\n';
-  output += `Export Date: ${data.exportInfo.date}\n`;
-  output += `Version: ${data.exportInfo.version}\n`;
-  output += '\n';
-  
-  // Tasks Section
-  output += '📋 TASKS\n';
-  output += '-'.repeat(30) + '\n';
-  if (data.todos && data.todos.length > 0) {
-    data.todos.forEach((todo, index) => {
-      const status = todo.completed ? '✅' : '⏳';
-      const createdDate = new Date(todo.createdAt).toLocaleDateString();
-      output += `${index + 1}. ${status} ${todo.text}\n`;
-      output += `   Created: ${createdDate}\n\n`;
-    });
-  } else {
-    output += 'No tasks found.\n\n';
-  }
-  
-  // Notes Section
-  output += '📝 NOTES\n';
-  output += '-'.repeat(30) + '\n';
-  if (data.notes && data.notes.length > 0) {
-    data.notes.forEach((note, index) => {
-      const createdDate = new Date(note.createdAt).toLocaleDateString();
-      output += `${index + 1}. ${note.text}\n`;
-      output += `   Created: ${createdDate}\n\n`;
-    });
-  } else {
-    output += 'No notes found.\n\n';
-  }
-  
-  // Session Statistics
-  output += '📊 SESSION STATISTICS\n';
-  output += '-'.repeat(30) + '\n';
-  if (data.sessionData && Object.keys(data.sessionData).length > 0) {
-    output += `Study Sessions Completed: ${data.sessionData.study || 0}\n`;
-    output += `Short Breaks Completed: ${data.sessionData.shortBreak || 0}\n`;
-    output += `Long Breaks Completed: ${data.sessionData.longBreak || 0}\n`;
-    output += `Daily Goal: ${data.sessionData.dailyGoal || 8} sessions\n\n`;
-  } else {
-    output += 'No session data found.\n\n';
-  }
-  
-  // Timer Settings
-  output += '⏰ TIMER SETTINGS\n';
-  output += '-'.repeat(30) + '\n';
-  if (data.studySettings && Object.keys(data.studySettings).length > 0) {
-    output += `Study Duration: ${data.studySettings.studyDuration || 25} minutes\n`;
-    output += `Short Break Duration: ${data.studySettings.shortBreakDuration || 5} minutes\n`;
-    output += `Long Break Duration: ${data.studySettings.longBreakDuration || 15} minutes\n`;
-    output += `Daily Goal: ${data.studySettings.dailyGoal || 8} sessions\n\n`;
-  } else {
-    output += 'Using default timer settings.\n\n';
-  }
-  
-  // Theme Settings
-  output += '🎨 THEME SETTINGS\n';
-  output += '-'.repeat(30) + '\n';
-  if (data.themeSettings && Object.keys(data.themeSettings).length > 0) {
-    output += `Theme Hue: ${data.themeSettings.hue || 210}\n`;
-    output += `Theme Saturation: ${data.themeSettings.saturation || 70}%\n`;
-    output += `Theme Lightness: ${data.themeSettings.lightness || 55}%\n\n`;
-  } else {
-    output += 'Using default theme settings.\n\n';
-  }
-  
-  // Customization Settings
-  output += '✨ CUSTOMIZATION SETTINGS\n';
-  output += '-'.repeat(30) + '\n';
-  output += `Dark Mode: ${data.preferences.darkMode === 'true' ? 'Enabled' : 'Disabled'}\n`;
-  output += `Glass Mode: ${data.preferences.glassMode === 'true' ? 'Enabled' : 'Disabled'}\n`;
-  output += `Background Blur: ${data.preferences.backgroundBlur || 0}px\n`;
-  if (data.preferences.currentWallpaper) {
-    output += `Current Wallpaper: ${data.preferences.currentWallpaper}\n`;
-  } else {
-    output += 'Current Wallpaper: None\n';
-  }
-  output += '\n';
-  
-  // Footer
-  output += '='.repeat(60) + '\n';
-  output += 'End of Export - Personal Study Room\n';
-  output += `Generated on ${data.exportInfo.date}\n`;
-  output += '='.repeat(60) + '\n';
-  
-  return output;
-}
-
 function downloadTextFile(content, filename) {
-  // Create a blob with the content
-  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-  
-  // Create a download link
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = filename;
-  
-  // Append to body, click, and remove
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  
-  // Clean up the URL object
-  URL.revokeObjectURL(link.href);
+  try {
+    // Create a blob with the content
+    const blob = new Blob([content], { type: 'application/json;charset=utf-8' });
+    
+    // Create a download link
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    
+    // Append to body, click, and remove
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Clean up the URL object
+    URL.revokeObjectURL(link.href);
+  } catch (error) {
+    console.error('Download failed:', error);
+    throw new Error('Failed to download file');
+  }
 }
 
 // -------------------------
@@ -1431,7 +1341,7 @@ function importData() {
   // Create file input for importing data
   const input = document.createElement('input');
   input.type = 'file';
-  input.accept = '.txt,.json';
+  input.accept = '.json';
   input.style.display = 'none';
   
   input.onchange = function(event) {
@@ -1444,24 +1354,21 @@ function importData() {
         try {
           const content = e.target.result;
           
-          // Try to parse as JSON first (for future JSON imports)
-          if (file.name.endsWith('.json')) {
-            try {
-              const jsonData = JSON.parse(content);
-              importJsonData(jsonData);
-              return;
-            } catch (jsonError) {
-              showNotification('Invalid JSON file format', 'error');
-              return;
-            }
+          // Parse JSON data
+          const jsonData = JSON.parse(content);
+          
+          // Validate the JSON structure
+          if (!jsonData.exportInfo || jsonData.exportInfo.appName !== 'Personal Study Room') {
+            showNotification('Invalid Study Room data file', 'error');
+            return;
           }
           
-          // For now, show the content preview (placeholder for full import)
-          showImportPreview(content, file.name);
+          // Show import confirmation
+          showImportConfirmation(jsonData, file.name);
           
         } catch (error) {
           console.error('Import error:', error);
-          showNotification('Failed to read file', 'error');
+          showNotification('Invalid JSON file format', 'error');
         }
       };
       
@@ -1478,30 +1385,62 @@ function importData() {
   input.click();
 }
 
-function showImportPreview(content, filename) {
-  // Create a modal-like preview
-  const preview = document.createElement('div');
-  preview.className = 'import-preview-modal';
-  preview.innerHTML = `
+function showImportConfirmation(data, filename) {
+  // Create a modal-like confirmation
+  const modal = document.createElement('div');
+  modal.className = 'import-preview-modal';
+  
+  // Count items to import
+  const todoCount = data.todos ? data.todos.length : 0;
+  const noteCount = data.notes ? data.notes.length : 0;
+  const hasSettings = data.studySettings && Object.keys(data.studySettings).length > 0;
+  const hasTheme = data.themeSettings && Object.keys(data.themeSettings).length > 0;
+  const hasCustomization = data.customizationSettings && Object.keys(data.customizationSettings).length > 0;
+  
+  modal.innerHTML = `
     <div class="import-preview-content">
       <div class="import-preview-header">
-        <h3>Import Preview: ${filename}</h3>
+        <h3>Import Data: ${filename}</h3>
         <button onclick="closeImportPreview()" class="close-preview-btn">×</button>
       </div>
       <div class="import-preview-body">
-        <p>File content preview (first 500 characters):</p>
-        <pre class="import-preview-text">${content.substring(0, 500)}${content.length > 500 ? '...' : ''}</pre>
+        <div class="import-summary">
+          <h4>Data to Import:</h4>
+          <ul class="import-items-list">
+            <li class="${todoCount > 0 ? 'has-data' : 'no-data'}">
+              📋 Tasks: ${todoCount} items
+            </li>
+            <li class="${noteCount > 0 ? 'has-data' : 'no-data'}">
+              📝 Notes: ${noteCount} items
+            </li>
+            <li class="${hasSettings ? 'has-data' : 'no-data'}">
+              ⏰ Timer Settings: ${hasSettings ? 'Yes' : 'No'}
+            </li>
+            <li class="${hasTheme ? 'has-data' : 'no-data'}">
+              🎨 Theme Settings: ${hasTheme ? 'Yes' : 'No'}
+            </li>
+            <li class="${hasCustomization ? 'has-data' : 'no-data'}">
+              ✨ Customization: ${hasCustomization ? 'Yes' : 'No'}
+            </li>
+          </ul>
+          <div class="import-warning">
+            <strong>⚠️ Warning:</strong> This will replace your current data. Make sure to export your current data first if you want to keep it.
+          </div>
+        </div>
         <div class="import-preview-actions">
           <button onclick="closeImportPreview()" class="preview-action-btn secondary">Cancel</button>
-          <button onclick="confirmImport('${filename}')" class="preview-action-btn primary">Import Feature Coming Soon!</button>
+          <button onclick="confirmImport('${filename}', true)" class="preview-action-btn primary">Import Data</button>
         </div>
       </div>
     </div>
   `;
   
-  document.body.appendChild(preview);
+  document.body.appendChild(modal);
   
-  // Add styles dynamically
+  // Store the data temporarily for import
+  window.pendingImportData = data;
+  
+  // Add styles if not already present
   if (!document.getElementById('import-preview-styles')) {
     const styles = document.createElement('style');
     styles.id = 'import-preview-styles';
@@ -1525,7 +1464,7 @@ function showImportPreview(content, filename) {
         border-radius: var(--border-radius-lg);
         border: 1px solid var(--border-color);
         box-shadow: var(--shadow-xl);
-        max-width: 600px;
+        max-width: 500px;
         max-height: 80vh;
         width: 90%;
         overflow: hidden;
@@ -1589,27 +1528,43 @@ function showImportPreview(content, filename) {
         max-height: 60vh;
       }
       
-      .import-preview-text {
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-color);
-        border-radius: var(--border-radius);
-        padding: var(--spacing-md);
-        font-family: 'Courier New', monospace;
-        font-size: 0.8rem;
-        white-space: pre-wrap;
-        overflow-x: auto;
+      .import-summary h4 {
+        margin-top: 0;
         color: var(--text-primary);
+      }
+      
+      .import-items-list {
+        list-style: none;
+        padding: 0;
         margin: var(--spacing-md) 0;
       }
       
-      .glass-mode .import-preview-text {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+      .import-items-list li {
+        padding: var(--spacing-xs) 0;
+        color: var(--text-secondary);
       }
       
-      .glass-mode.dark-mode .import-preview-text {
-        background: rgba(255, 255, 255, 0.05);
+      .import-items-list li.has-data {
+        color: var(--primary-color);
+        font-weight: 500;
+      }
+      
+      .import-items-list li.no-data {
+        opacity: 0.6;
+      }
+      
+      .import-warning {
+        background: rgba(255, 193, 7, 0.1);
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        border-radius: var(--border-radius);
+        padding: var(--spacing-md);
+        margin: var(--spacing-md) 0;
+        color: var(--text-primary);
+        font-size: 0.9rem;
+      }
+      
+      .dark-mode .import-warning {
+        background: rgba(255, 193, 7, 0.15);
       }
       
       .import-preview-actions {
@@ -1656,17 +1611,172 @@ function closeImportPreview() {
   if (modal) {
     modal.remove();
   }
+  // Clean up temporary data
+  if (window.pendingImportData) {
+    delete window.pendingImportData;
+  }
 }
 
-function confirmImport(filename) {
+function confirmImport(filename, shouldImport) {
+  if (shouldImport && window.pendingImportData) {
+    importJsonData(window.pendingImportData);
+  }
   closeImportPreview();
-  showNotification('Import feature will be available in a future update!', 'info');
 }
 
 function importJsonData(data) {
-  // Placeholder for future JSON import functionality
-  showNotification('JSON import feature coming soon!', 'info');
+  try {
+    let importedItems = [];
+    
+    // Import todos
+    if (data.todos && Array.isArray(data.todos)) {
+      localStorage.setItem('todos', JSON.stringify(data.todos));
+      todos = data.todos;
+      if (typeof renderTodos === 'function') renderTodos();
+      importedItems.push(`${data.todos.length} tasks`);
+    }
+    
+    // Import notes
+    if (data.notes && Array.isArray(data.notes)) {
+      localStorage.setItem('notes', JSON.stringify(data.notes));
+      if (typeof renderNotes === 'function') renderNotes();
+      importedItems.push(`${data.notes.length} notes`);
+    }
+    
+    // Import session data
+    if (data.sessionData && typeof data.sessionData === 'object') {
+      localStorage.setItem('sessionData', JSON.stringify(data.sessionData));
+      sessionData = { ...sessionData, ...data.sessionData };
+      if (typeof updateSessionDisplay === 'function') updateSessionDisplay();
+      importedItems.push('session data');
+    }
+    
+    // Import study settings
+    if (data.studySettings && typeof data.studySettings === 'object') {
+      localStorage.setItem('studySettings', JSON.stringify(data.studySettings));
+      // Apply settings immediately
+      if (data.studySettings.studyDuration) {
+        studyDuration = data.studySettings.studyDuration * 60;
+      }
+      if (data.studySettings.shortBreakDuration) {
+        shortBreakDuration = data.studySettings.shortBreakDuration * 60;
+      }
+      if (data.studySettings.longBreakDuration) {
+        longBreakDuration = data.studySettings.longBreakDuration * 60;
+      }
+      if (data.studySettings.dailyGoal) {
+        sessionData.dailyGoal = data.studySettings.dailyGoal;
+      }
+      
+      // Update settings UI if elements exist
+      const studyInput = document.getElementById('study-duration');
+      const shortInput = document.getElementById('short-break-duration');
+      const longInput = document.getElementById('long-break-duration');
+      const dailyGoalInput = document.getElementById('daily-goal');
+      
+      if (studyInput) studyInput.value = data.studySettings.studyDuration || 25;
+      if (shortInput) shortInput.value = data.studySettings.shortBreakDuration || 5;
+      if (longInput) longInput.value = data.studySettings.longBreakDuration || 15;
+      if (dailyGoalInput) dailyGoalInput.value = data.studySettings.dailyGoal || 8;
+      
+      // Reset timer with new settings
+      if (typeof resetTimer === 'function') resetTimer();
+      
+      importedItems.push('timer settings');
+    }
+    
+    // Import theme settings
+    if (data.themeSettings && typeof data.themeSettings === 'object') {
+      localStorage.setItem('themeSettings', JSON.stringify(data.themeSettings));
+      loadThemeSettings();
+      loadThemeSettingsForSliders();
+      importedItems.push('theme settings');
+    }
+    
+    // Import customization settings
+    if (data.customizationSettings && typeof data.customizationSettings === 'object') {
+      localStorage.setItem('customizationSettings', JSON.stringify(data.customizationSettings));
+      importedItems.push('customization settings');
+    }
+    
+    // Import preferences
+    if (data.preferences && typeof data.preferences === 'object') {
+      // Dark mode
+      if (data.preferences.darkMode !== undefined) {
+        localStorage.setItem('darkMode', data.preferences.darkMode);
+        const isDarkMode = data.preferences.darkMode === 'true';
+        const modeToggle = document.getElementById('mode-toggle');
+        const modeLabel = document.getElementById('mode-label');
+        
+        if (isDarkMode) {
+          document.body.classList.add('dark-mode');
+        } else {
+          document.body.classList.remove('dark-mode');
+        }
+        
+        if (modeToggle) modeToggle.checked = isDarkMode;
+        if (modeLabel) modeLabel.textContent = isDarkMode ? 'Dark Mode' : 'Light Mode';
+        
+        updateDarkModeElements(isDarkMode);
+      }
+      
+      // Glass mode
+      if (data.preferences.glassMode !== undefined) {
+        localStorage.setItem('glassMode', data.preferences.glassMode);
+        loadGlassMode();
+      }
+      
+      // Background blur
+      if (data.preferences.backgroundBlur !== undefined) {
+        localStorage.setItem('backgroundBlur', data.preferences.backgroundBlur);
+        loadBackgroundBlur();
+      }
+      
+      // Current wallpaper
+      if (data.preferences.currentWallpaper) {
+        localStorage.setItem('currentWallpaper', data.preferences.currentWallpaper);
+        loadWallpaper();
+      }
+      
+      importedItems.push('preferences');
+    }
+    
+    // Show success message
+    const itemsText = importedItems.length > 0 ? importedItems.join(', ') : 'data';
+    showNotification(`Successfully imported: ${itemsText}!`, 'success');
+    
+    // Force a page refresh to ensure all changes are applied
+    setTimeout(() => {
+      showNotification('Refreshing page to apply all changes...', 'info');
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    }, 2000);
+    
+  } catch (error) {
+    console.error('Import failed:', error);
+    showNotification('Failed to import data', 'error');
+  }
 }
+// Close popup when pressing Escape key
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    const popup = document.getElementById('music-popup');
+    if (popup && popup.classList.contains('active')) {
+      toggleMusicPlayer();
+    }
+  }
+});
+
+// Prevent popup from closing when clicking inside the popup content
+document.addEventListener('DOMContentLoaded', function() {
+  const popupContent = document.querySelector('.music-popup-content');
+  if (popupContent) {
+    popupContent.addEventListener('click', function(event) {
+      event.stopPropagation();
+    });
+  }
+});
 
 // Music Player Popup Functions
 function toggleMusicPlayer() {
@@ -1694,7 +1804,7 @@ function playVideoFromUrl() {
   const url = urlInput.value.trim();
   
   if (!url) {
-    alert('Please enter a YouTube URL');
+    showNotification('Please enter a YouTube URL', 'error');
     return;
   }
   
@@ -1730,27 +1840,9 @@ function playVideoFromUrl() {
       button.textContent = originalText;
       button.style.background = '';
     }, 2000);
+    
+    showNotification('Video loaded successfully!', 'success');
   } else {
-    alert('Please enter a valid YouTube URL');
+    showNotification('Please enter a valid YouTube URL', 'error');
   }
 }
-
-// Close popup when pressing Escape key
-document.addEventListener('keydown', function(event) {
-  if (event.key === 'Escape') {
-    const popup = document.getElementById('music-popup');
-    if (popup && popup.classList.contains('active')) {
-      toggleMusicPlayer();
-    }
-  }
-});
-
-// Prevent popup from closing when clicking inside the popup content
-document.addEventListener('DOMContentLoaded', function() {
-  const popupContent = document.querySelector('.music-popup-content');
-  if (popupContent) {
-    popupContent.addEventListener('click', function(event) {
-      event.stopPropagation();
-    });
-  }
-});
