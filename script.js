@@ -361,20 +361,13 @@ function loadWallpapers() {
 // Glass Mode Functionality
 // -------------------------
 function toggleGlassMode() {
-  // Get all glass mode toggles on the page
-  const glassModeToggles = [
-    document.getElementById('glass-mode-toggle-customize'),
-    document.getElementById('glass-mode-toggle-settings')
-  ];
-  
-  const glassModeLabels = [
-    document.getElementById('glass-mode-label-customize'),
-    document.getElementById('glass-mode-label-settings')
-  ];
+  // Get glass mode toggle from customize section only
+  const glassModeToggle = document.getElementById('glass-mode-toggle-customize');
+  const glassModeLabel = document.getElementById('glass-mode-label-customize');
   
   // Get the current state from the element that triggered the change
   let isGlassMode = false;
-  const activeToggle = event?.target || glassModeToggles.find(toggle => toggle?.checked);
+  const activeToggle = event?.target || glassModeToggle;
   
   if (activeToggle) {
     isGlassMode = activeToggle.checked;
@@ -392,14 +385,9 @@ function toggleGlassMode() {
     showNotification('Glass mode disabled', 'info');
   }
   
-  // Sync all toggles and labels
-  glassModeToggles.forEach(toggle => {
-    if (toggle) toggle.checked = isGlassMode;
-  });
-  
-  glassModeLabels.forEach(label => {
-    if (label) label.textContent = isGlassMode ? 'Enabled' : 'Disabled';
-  });
+  // Update toggle and label
+  if (glassModeToggle) glassModeToggle.checked = isGlassMode;
+  if (glassModeLabel) glassModeLabel.textContent = isGlassMode ? 'Enabled' : 'Disabled';
   
   // Save glass mode setting
   localStorage.setItem('glassMode', isGlassMode);
@@ -408,38 +396,21 @@ function toggleGlassMode() {
 function loadGlassMode() {
   const savedGlassMode = localStorage.getItem('glassMode') === 'true';
   
-  const glassModeToggles = [
-    document.getElementById('glass-mode-toggle-customize'),
-    document.getElementById('glass-mode-toggle-settings')
-  ];
-  
-  const glassModeLabels = [
-    document.getElementById('glass-mode-label-customize'),
-    document.getElementById('glass-mode-label-settings')
-  ];
+  const glassModeToggle = document.getElementById('glass-mode-toggle-customize');
+  const glassModeLabel = document.getElementById('glass-mode-label-customize');
   
   if (savedGlassMode) {
     document.body.classList.add('glass-mode');
     
-    // Update all toggles and labels
-    glassModeToggles.forEach(toggle => {
-      if (toggle) toggle.checked = true;
-    });
-    
-    glassModeLabels.forEach(label => {
-      if (label) label.textContent = 'Enabled';
-    });
+    // Update toggle and label
+    if (glassModeToggle) glassModeToggle.checked = true;
+    if (glassModeLabel) glassModeLabel.textContent = 'Enabled';
   } else {
     document.body.classList.remove('glass-mode');
     
-    // Update all toggles and labels
-    glassModeToggles.forEach(toggle => {
-      if (toggle) toggle.checked = false;
-    });
-    
-    glassModeLabels.forEach(label => {
-      if (label) label.textContent = 'Disabled';
-    });
+    // Update toggle and label
+    if (glassModeToggle) glassModeToggle.checked = false;
+    if (glassModeLabel) glassModeLabel.textContent = 'Disabled';
   }
 }
 
@@ -447,37 +418,18 @@ function loadGlassMode() {
 // Background Blur Functionality
 // -------------------------
 function updateBackgroundBlur() {
-  // Get blur sliders from both customize and settings sections
-  const blurSliders = [
-    document.getElementById('blur-slider-customize'),
-    document.getElementById('blur-slider-settings')
-  ];
+  // Get blur slider from customize section only
+  const blurSlider = document.getElementById('blur-slider-customize');
+  const blurValue = document.getElementById('blur-value-customize');
   
-  const blurValues = [
-    document.getElementById('blur-value-customize'),
-    document.getElementById('blur-value-settings')
-  ];
-  
-  // Get the current blur intensity from the active slider
+  // Get the current blur intensity
   let blurIntensity = 0;
-  const activeSlider = blurSliders.find(slider => slider && document.activeElement === slider);
-  
-  if (activeSlider) {
-    blurIntensity = activeSlider.value;
-  } else {
-    // Use the first available slider value
-    const slider = blurSliders.find(slider => slider);
-    if (slider) blurIntensity = slider.value;
+  if (blurSlider) {
+    blurIntensity = blurSlider.value;
   }
   
-  // Sync all sliders and value displays
-  blurSliders.forEach(slider => {
-    if (slider) slider.value = blurIntensity;
-  });
-  
-  blurValues.forEach(value => {
-    if (value) value.textContent = `${blurIntensity}px`;
-  });
+  // Update value display
+  if (blurValue) blurValue.textContent = `${blurIntensity}px`;
   
   // Apply blur effect
   if (blurIntensity > 0) {
@@ -499,24 +451,12 @@ function updateBackgroundBlur() {
 function loadBackgroundBlur() {
   const savedBlur = localStorage.getItem('backgroundBlur');
   if (savedBlur !== null) {
-    const blurSliders = [
-      document.getElementById('blur-slider-customize'),
-      document.getElementById('blur-slider-settings')
-    ];
+    const blurSlider = document.getElementById('blur-slider-customize');
+    const blurValue = document.getElementById('blur-value-customize');
     
-    const blurValues = [
-      document.getElementById('blur-value-customize'),
-      document.getElementById('blur-value-settings')
-    ];
-    
-    // Update all sliders and values
-    blurSliders.forEach(slider => {
-      if (slider) slider.value = savedBlur;
-    });
-    
-    blurValues.forEach(value => {
-      if (value) value.textContent = `${savedBlur}px`;
-    });
+    // Update slider and value
+    if (blurSlider) blurSlider.value = savedBlur;
+    if (blurValue) blurValue.textContent = `${savedBlur}px`;
     
     if (savedBlur > 0) {
       document.body.classList.add('background-blur');
@@ -1215,8 +1155,8 @@ function loadThemeSettingsForSliders() {
 // -------------------------
 function saveCustomizationSettings() {
   const settings = {
-    backgroundBlur: document.getElementById('blur-slider')?.value || '0',
-    glassMode: document.getElementById('glass-mode-toggle')?.checked || false,
+    backgroundBlur: document.getElementById('blur-slider-customize')?.value || '0',
+    glassMode: document.getElementById('glass-mode-toggle-customize')?.checked || false,
     currentWallpaper: localStorage.getItem('currentWallpaper') || null,
     backgroundColor: document.getElementById('bg-color-picker')?.value || '#ffffff'
   };
@@ -1229,7 +1169,7 @@ function loadCustomizationSettings() {
   if (savedSettings) {
     // Load blur settings
     if (savedSettings.backgroundBlur) {
-      const blurSlider = document.getElementById('blur-slider');
+      const blurSlider = document.getElementById('blur-slider-customize');
       if (blurSlider) {
         blurSlider.value = savedSettings.backgroundBlur;
         updateBackgroundBlur();
@@ -1238,7 +1178,7 @@ function loadCustomizationSettings() {
     
     // Load glass mode
     if (savedSettings.glassMode) {
-      const glassModeToggle = document.getElementById('glass-mode-toggle');
+      const glassModeToggle = document.getElementById('glass-mode-toggle-customize');
       if (glassModeToggle) {
         glassModeToggle.checked = savedSettings.glassMode;
         toggleGlassMode();
