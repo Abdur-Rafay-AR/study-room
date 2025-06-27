@@ -57,9 +57,9 @@ A productivity-focused web application designed to enhance your study sessions w
 - Floating music control button
 
 ### 📁 Data Management
-- Export all data (tasks, notes, settings) as a text file
-- Import functionality (coming soon)
-- All data saved locally in your browser
+- Export all data as JSON
+- Import previous data
+- Cross-device compatibility (via export/import)
 
 ## Keyboard Shortcuts
 - **Ctrl+Space**: Start/Pause timer
