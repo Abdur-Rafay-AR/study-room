@@ -191,6 +191,19 @@ input:checked + .slider:before {
     padding: var(--spacing-xl);
 }
 
+/* Mobile-first responsive adjustments for main container */
+@media (max-width: 768px) {
+    .main-container {
+        padding: var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .main-container {
+        padding: var(--spacing-sm);
+    }
+}
+
 /* Hero Section - Timer and Tasks */
 .hero-section {
     margin-bottom: var(--spacing-xl);
@@ -222,6 +235,23 @@ input:checked + .slider:before {
     width: 280px;
     max-height: 400px;
     z-index: 2;
+}
+
+/* Mobile responsive positioning for hero task card */
+@media (max-width: 768px) {
+    .hero-task-card {
+        position: static;
+        width: 100%;
+        max-height: none;
+        margin-top: var(--spacing-lg);
+        order: 2;
+    }
+    
+    .timer-tasks-container {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-lg);
+    }
 }
 
 .hero-task-card .card-header {
@@ -284,6 +314,25 @@ input:checked + .slider:before {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+/* Mobile responsive timer card */
+@media (max-width: 768px) {
+    .timer-card {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        min-height: 400px;
+        padding: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 480px) {
+    .timer-card {
+        max-width: 320px;
+        min-height: 350px;
+        padding: var(--spacing-md);
+    }
 }
 
 .timer-header {
@@ -468,6 +517,49 @@ input:checked + .slider:before {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xl);
+}
+
+/* Mobile responsive content grid */
+@media (max-width: 768px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
+    }
+    
+    .content-column {
+        gap: var(--spacing-lg);
+    }
+    
+    .card-header {
+        padding: var(--spacing-md) var(--spacing-lg) var(--spacing-sm);
+    }
+    
+    .card-content {
+        padding: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 480px) {
+    .content-grid {
+        gap: var(--spacing-md);
+    }
+    
+    .content-column {
+        gap: var(--spacing-md);
+    }
+    
+    .card-header {
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    
+    .card-header h3 {
+        font-size: 1rem;
+    }
+    
+    .card-content {
+        padding: var(--spacing-md);
+    }
 }
 
 /* Card Styles */
@@ -1296,6 +1388,45 @@ input:checked + .slider:before {
     }
 }
 
+/* Mobile responsive timer display and controls */
+@media (max-width: 768px) {
+    #timer {
+        font-size: 2.5rem;
+    }
+    
+    .timer-controls {
+        flex-wrap: wrap;
+        gap: var(--spacing-xs);
+    }
+    
+    .control-btn {
+        flex: 1;
+        min-width: 70px;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #timer {
+        font-size: 2rem;
+    }
+    
+    .control-btn {
+        min-width: 60px;
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.75rem;
+    }
+    
+    .timer-header h2 {
+        font-size: 1rem;
+    }
+    
+    #session-counter {
+        font-size: 0.75rem;
+    }
+}
+
 /* Utility Classes */
 .hidden {
     display: none;
@@ -1603,7 +1734,6 @@ body.focus-mode .floating-music-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(10px);
     position: relative;
     overflow: hidden;
 }
@@ -2582,91 +2712,9 @@ body.background-blur::before {
   border: none;
 }
 
-/* Responsive Design */
+/* Mobile responsive: Hide keyboard shortcuts on mobile */
 @media (max-width: 768px) {
-  .floating-music-btn {
-    bottom: 20px;
-    right: 20px;
-    padding: 12px 16px;
-    min-width: 100px;
-  }
-  
-  .floating-music-btn .music-label {
-    font-size: 12px;
-  }
-  
-  .music-popup {
-    width: 95%;
-    max-height: 85vh;
-  }
-  
-  .music-popup-header,
-  .music-popup-body {
-    padding: 16px;
-  }
-  
-  .video-input-group {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .video-container {
-    height: 250px;
-  }
-}
-
-
-/* Color Picker Styling */
-#bg-color-picker {
-  width: 50px;
-  height: 50px;
-  border: none;
-  border-radius:  50%;
-  cursor: pointer;
-  padding: 0;
-  background: none;
-  outline: none;
-  overflow: hidden;
-  transition: var(--transition);
-  box-shadow: var(--shadow-sm);
-}
-
-#bg-color-picker::-webkit-color-swatch-wrapper {
-  padding: 0;
-  border: none;
-  border-radius: 50%;
-  overflow: hidden;
-}
-
-#bg-color-picker::-webkit-color-swatch {
-  border: none;
-  border-radius: 50%;
-  padding: 0;
-  margin: 0;
-}
-
-#bg-color-picker::-moz-color-swatch {
-  border: none;
-  border-radius: 50%;
-  padding: 0;
-  margin: 0;
-}
-
-#bg-color-picker:hover {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-md);
-}
-
-#bg-color-picker:focus {
-  box-shadow: 0 0 0 3px hsla(var(--primary-hue), var(--primary-saturation), var(--primary-lightness), 0.3);
-  margin: 0;
-}
-
-#bg-color-picker:hover {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-md);
-}
-
-#bg-color-picker:focus {
-  box-shadow: 0 0 0 3px hsla(var(--primary-hue), var(--primary-saturation), var(--primary-lightness), 0.3);
+    .keyboard-shortcuts {
+        display: none !important;
+    }
 }
