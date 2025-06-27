@@ -2,7 +2,7 @@
 
 A productivity-focused web application designed to enhance your study sessions with a Pomodoro timer, task management, notes, and customizable environment.
 
-![Study Room Screenshot]
+
 ![abdur-rafay-ar-github-io-study-room-2025](https://github.com/user-attachments/assets/2ceced3f-8a72-4950-8d24-c9033833dff0)
 
 
